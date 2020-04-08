@@ -8,22 +8,27 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import ApplicationContext from './ApplicationContext';
+import Checkout from './pages/checkout';
 
 function App() {
-  const [order, setOrder] = useState({orders: [], orderTotal: 0})
+  const [order, setOrder] = useState({pizzasOrdered: [], orderTotal: 0})
   return (
-    <>
+    <ApplicationContext.Provider value={{order, setOrder}}>
       <Layout>
         <Switch>
           <Route path="/order-now">
-            <OrderNow order={{order, setOrder}}/>
+            <OrderNow/>
+          </Route>
+          <Route path="/checkout">
+            <Checkout/>
           </Route>
           <Route path="/">
             <HomePage/>
           </Route>
         </Switch>
       </Layout>
-    </>
+    </ApplicationContext.Provider>
   );
 }
 

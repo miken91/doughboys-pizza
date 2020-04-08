@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import OrderNow from '../pages/order-now';
 
 function CustomPizza(props) {
     const [checkedItems, setCheckedItems] = useState(props.pizza.toppings);
     const [selectedRadioButton, setSelectedRadioButton] = useState(props.pizza.sauceOptions[0]);
     const [additionalComments, setAdditionalComments] = useState("");
     const handleClick = () => {
-        let orders = props.order.order.orders;
+        let orders = props.order.order.pizzasOrdered;
         let total;
         if (props.pizza.type === "Cheese") {
             total = ((Object.keys(checkedItems).filter(k => checkedItems[k]).length * .50) + 5).toFixed(2);
@@ -14,7 +13,7 @@ function CustomPizza(props) {
             total = props.pizza.price.toFixed(2);
         }
         orders.push({ type: props.pizza.type, sauce: selectedRadioButton, toppings: Object.keys(checkedItems).filter(k => checkedItems[k]), comments: additionalComments, price: total })
-        props.order.setOrder({ orders: [...orders], orderTotal: (parseFloat(props.order.order.orderTotal) + parseFloat(total)).toFixed(2) })
+        props.order.setOrder({ pizzasOrdered: [...orders], orderTotal: (parseFloat(props.order.order.orderTotal) + parseFloat(total)).toFixed(2) })
         setCheckedItems(props.pizza.toppings);
         setSelectedRadioButton("Pizza Sauce");
         setAdditionalComments("");

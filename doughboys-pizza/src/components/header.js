@@ -15,12 +15,16 @@ const Header = () => (
                     <h1 className="brand-title">Woodfired Pizza</h1>
                 </Link>
                 <div class="level is-mobile">
+                <div class="level-item">
                     <Link to="/order-now">
-                        <div class="level-item"><h1 className="header-menu">Order Now</h1></div>
+                        <h1 className="header-menu">Order Now</h1>
                     </Link>
+                </div>
+                <div class="level-item">
                     <Link to="/contact">
-                        <div class="level-item"><h1 className="header-menu">Contact</h1></div>
+                        <h1 className="header-menu">Contact</h1>
                     </Link>
+                </div>
                 </div>
             </div>
         </div>

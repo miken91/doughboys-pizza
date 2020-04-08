@@ -1,9 +1,16 @@
-import React, {useState} from "react";
-import CustomPizza from "../components/custom-pizza"
+import React, {useState, useContext} from "react";
+import CustomPizza from "../components/custom-pizza";
+import ApplicationContext from "../ApplicationContext";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+  } from "react-router-dom";
 let pizzasForMenu = require('./pizzasForMenu.json');
 
-function OrderNow(state) {
-    let order = state.order;
+function OrderNow() {
+    const state = useContext(ApplicationContext);
     const [mobileTab, setMobileTab] = useState(0);
     return (
             <div className="viewport-toggle">
@@ -14,7 +21,7 @@ function OrderNow(state) {
                                 <div class="columns">
                                     <div class="column is-8 is-mobile">
                                         {pizzasForMenu.Pizzas.map((pizza, i) =>
-                                            <CustomPizza order={{order:order.order, setOrder:order.setOrder}} pizza={pizza} />
+                                            <CustomPizza order={{order:state.order, setOrder:state.setOrder}} pizza={pizza} />
                                         )}
                                     </div>
                                 </div>
@@ -23,8 +30,8 @@ function OrderNow(state) {
                                 <div className="order-summary">
                                     <h1 className="order-title">Your Order</h1>
                                     <div className="order-summary-orders">
-                                    {order.orders ? <>
-                                        {order.orders.map((pizza, i) =>
+                                    {state.order.pizzasOrdered ? <>
+                                        {state.order.pizzasOrdered.map((pizza, i) =>
                                             <>
                                                 <div className="order-summary-pizza-item">
                                                     <div class="level">
@@ -59,11 +66,13 @@ function OrderNow(state) {
                                                     <div className="order-summary-pizza-title">Order Total</div>
                                                 </div>
                                                 <div class="level-item">
-                                                    <div>{order.orderTotal}</div>
+                                                    <div>{state.order.orderTotal}</div>
                                                 </div>
                                             </div>
                                             <div class="level-right">
-                                                <button class="button is-primary">Place Order</button>
+                                                <Link to="/checkout">
+                                                    <button class="button is-primary">Place Order</button>
+                                                </Link>
                                             </div>
                                         </div>
                                     </div>
@@ -82,15 +91,15 @@ function OrderNow(state) {
                         {mobileTab === 0 ?
                             <>
                                 {pizzasForMenu.Pizzas.map((pizza, i) =>
-                                    <CustomPizza order={order} pizza={pizza} />
+                                    <CustomPizza order={{order:state.order, setOrder:state.setOrder}} pizza={pizza} />
                                 )}
                             </> :
                             <>
                                 <div className="order-summary">
                                     <h1 className="order-title">Your Order</h1>
                                     <div className="order-summary-orders">
-                                         {order.orders ? <>
-                                        {order.orders.map((pizza, i) =>
+                                         {state.order.pizzasOrdered ? <>
+                                        {state.order.pizzasOrdered.map((pizza, i) =>
                                             <>
                                                 <div className="order-summary-pizza-item">
                                                     <div class="level is-mobile">
@@ -125,11 +134,13 @@ function OrderNow(state) {
                                                     <div className="order-summary-pizza-title">Order Total</div>
                                                 </div>
                                                 <div class="level-item">
-                                                    <div>{order.orderTotal}</div>
+                                                    <div>{state.order.orderTotal}</div>
                                                 </div>
                                             </div>
                                             <div class="level-right">
-                                                <button class="button is-primary">Place Order</button>
+                                                <Link to="/checkout">
+                                                    <button class="button is-primary">Place Order</button>
+                                                </Link>
                                             </div>
                                         </div>
                                     </div>

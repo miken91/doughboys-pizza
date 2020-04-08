@@ -1,0 +1,58 @@
+{
+    "Pizzas" : [
+        {
+            "type" : "Cheese",
+            "price" : 5,
+            "sauceOptions" : ["Pizza Sauce", "Ranch Based Sauce"],
+            "toppings" : {"Pepperoni" : false, "Sausage" : false, "Bacon" : false, "Grilled Garlic Chicken" : false, "Buffalo Chicken" : false, "Hickory Smoked Ham" : false, "Portabella Mushroom" : false, "Jalapenos" : false, "Green Bell Peppers" : false, "Red Onions" : false, "Green Olives" : false, "Black Olives" : false, "Tomatoes" : false, "Pineapple" : false, "Feta Cheese" : false, "Sweet Heat Sauce" : false}
+        },
+        {
+            "type" : "Italiano",
+            "price" : 8,
+            "sauceOptions" : ["Pizza Sauce"],
+            "toppings" : {"Volpi Genoa Salame" : true, "Pepperoni" : true, "Italian Sausage" : true, "Green Olives" : true}
+        },
+        {
+            "type" : "Meat",
+            "price" : 7,
+            "sauceOptions" : ["Pizza Sauce"],
+            "toppings" : {"Pepperoni" : true, "Sausage" : true, "Bacon" : true, "Hickory Smoked Ham" : true}
+        },
+        {
+            "type" : "Veggie",
+            "price" : 7,
+            "sauceOptions" : ["Pizza Sauce"],
+            "toppings" : {"Tomatoes" : true, "Green Bell Pepper" : true, "Black Olives" : true,  "Portabella Mushrooms" : true, "Red Onions" : true}
+        },
+        {
+            "type" : "Supreme",
+            "price" : 7,
+            "sauceOptions" : ["Pizza Sauce"],
+            "toppings" : {"Pepperoni" : true, "Sausage" : true, "Bacon" : true, "Green Bell Peppers" : true,  "Portabella Mushrooms" : true, "Black Olives" : true, "Red Onions" : true}
+        },
+        {
+            "type" : "Buffalo Chicken",
+            "price" : 6,
+            "sauceOptions" : ["Ranch Based Sauce"],
+            "toppings" : {"Buffalo Chicken" : true, "Red Onion" : true}
+        },
+        {
+            "type" : "Hawaiian",
+            "price" : 6.50,
+            "sauceOptions" : ["Pizza Sauce"],
+            "toppings" : {"Hickory Smoked Ham" : true,"Pineapple" : true, "Jalapeno Peppers" : true}
+        },
+        {
+            "type" : "Doughboy's Club",
+            "price" : 6.50,
+            "sauceOptions" : ["Ranch Based Sauce"],
+            "toppings" : {"Grilled Garlic Chicken" : true, "Bacon": true, "Tomato" : true}
+        },
+        {
+            "type" : "Sweet Heat",
+            "price" : 7,
+            "sauceOptions" : ["Sweet Heat Sauce"],
+            "toppings" : {"Grilled Garlic Chicken" : true, "Pineapple" : true, "Red Onion" : true, "Green Peppers" : true}
+        }
+    ]
+}

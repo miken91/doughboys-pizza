@@ -4,6 +4,7 @@ import ApplicationContext from "../ApplicationContext";
 import {
     Link
 } from "react-router-dom";
+import PaymentPage from '../components/square-payment';
 
 function Checkout() {
     const paypalOptions = {
@@ -54,11 +55,7 @@ function Checkout() {
                             </div>
                         </div>
                     </div>
-                    <PayPalButton
-                        paypalOptions={paypalOptions}
-                        buttonStyles={buttonStyles}
-                        amount={1.00}
-                    />
+                    <PaymentPage/>
                 </div>
             </div>
         </div>

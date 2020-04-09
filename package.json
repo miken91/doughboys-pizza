@@ -15,6 +15,7 @@
     "react-paypal-button-v2": "^2.6.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
+    "react-square-payment-form": "^0.6.1",
     "typescript": "^3.8.3"
   },
   "scripts": {
@@ -38,5 +39,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy" : "http://localhost:8080"
+  "proxy": "http://localhost:8080"
 }

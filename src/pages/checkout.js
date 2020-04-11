@@ -7,20 +7,11 @@ import {
 import PaymentPage from '../components/square-payment';
 
 function Checkout() {
-    const paypalOptions = {
-        clientId: 'ASKoVgL7hRbpyGbnDZXdsh7iP6yyf4s00YbFuBaixpaE7ZCoIIW6_q9XNcz2gY-v1q3y7XGddMlKJjAp',
-        intent: 'capture'
-    }
-
-    const buttonStyles = {
-        layout: 'vertical',
-        shape: 'rect',
-    }
     const state = useContext(ApplicationContext);
     return (
         <div class="container" style={{ height: "80vh" }}>
-            <div class="box columns">
-                <div class="column is-4 is-offset-4 is-mobile">
+            <div class="box">
+                <div class="column is-4 is-offset-4">
                     <h1 className="contact-information-title">Contact Information</h1>
                     <div class="field">
                         <label class="label">Name</label>

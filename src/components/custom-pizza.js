@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { store } from 'react-notifications-component';
+import { isMobile } from 'react-device-detect';
 
 function CustomPizza(props) {
     const [checkedItems, setCheckedItems] = useState(props.pizza.toppings);
@@ -14,6 +16,18 @@ function CustomPizza(props) {
         }
         orders.push({ type: props.pizza.type, sauce: selectedRadioButton, toppings: Object.keys(checkedItems).filter(k => checkedItems[k]), comments: additionalComments, price: total })
         props.order.setOrder({ pizzasOrdered: [...orders], orderTotal: (parseFloat(props.order.order.orderTotal) + parseFloat(total)).toFixed(2) })
+        if (isMobile) {
+            store.addNotification({
+                title: "Item Added",
+                message: props.pizza.type + " Pizza Added To Cart.",
+                type: "success",
+                insert: "top",
+                container: "top-center",
+                dismiss: {
+                    duration: 1500,
+                }
+            })
+        }
         setCheckedItems(props.pizza.toppings);
         setSelectedRadioButton("Pizza Sauce");
         setAdditionalComments("");
@@ -53,7 +67,7 @@ function CustomPizza(props) {
             <label class="label">Additional Comments</label>
             <div class="field">
                 <div class="contorl">
-                    <textarea class="textarea has-fixed-size"value={additionalComments} onChange={(event) => setAdditionalComments(event.target.value)}></textarea>
+                    <textarea class="textarea has-fixed-size" value={additionalComments} onChange={(event) => setAdditionalComments(event.target.value)}></textarea>
                 </div>
             </div>
             <button class="button is-primary is-small" onClick={handleClick}>Add To Order</button>

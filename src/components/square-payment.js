@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import ApplicationContext from '../ApplicationContext';
 import {
     SquarePaymentForm,
-    ApplePayButton,
     CreditCardCVVInput,
     CreditCardExpirationDateInput,
     CreditCardNumberInput,
     CreditCardPostalCodeInput,
     CreditCardSubmitButton,
-    GooglePayButton,
-    MasterpassButton,
 } from 'react-square-payment-form';
 import 'react-square-payment-form/lib/default.css';
 
 const APPLICATION_ID = 'sandbox-sq0idb-x0bV_9Wr6Jt5NqrJ8rfOmA';
 const LOCATION_ID = 'TMFB84WRJX7JS';
 
-const PaymentPage = () => {
+const PaymentPage = (props) => {
+    const state = useContext(ApplicationContext);
+    const [loading, setLoading] = useState(false); 
     const [errorMessages, setErrorMessages] = useState([]);
 
     function cardNonceResponseReceived(errors, nonce, cardData, buyerVerificationToken) {
@@ -26,7 +26,7 @@ const PaymentPage = () => {
 
         setErrorMessages([]);
 
-        alert('nonce created: ' + nonce + ', buyerVerificationToken: ' + buyerVerificationToken);
+        setLoading(true)
         fetch('https://doughboys-pizza-express.herokuapp.com/payments', {
             method: 'POST',
             headers: {
@@ -37,9 +37,9 @@ const PaymentPage = () => {
         .then((response) => {
            return response.json(); 
         }).then((data) => {
-            console.log(data);
+            setLoading(false)
+            props.orderReceipt.setOrderReceipt(data);
         })
-        // API.post('/payments', data: { nonce: nonce, buyerVerificationToken: buyerVerificationToken }) // implement this
     }
 
     function createPaymentRequest() {
@@ -50,48 +50,41 @@ const PaymentPage = () => {
             countryCode: 'US',
             total: {
                 label: 'MERCHANT NAME',
-                amount: '1',
+                amount: state.order.orderTotal,
                 pending: false,
             },
-            lineItems: [
-                {
-                    label: 'Subtotal',
-                    amount: '1',
-                    pending: false,
-                },
-            ],
         };
     }
 
-    function createVerificationDetails() {
-        return {
-            amount: '100.00',
-            currencyCode: 'USD',
-            intent: 'CHARGE',
-            billingContact: {
-                familyName: 'Smith',
-                givenName: 'John',
-                email: 'jsmith@example.com',
-                country: 'GB',
-                city: 'London',
-                addressLines: ["1235 Emperor's Gate"],
-                postalCode: 'SW7 4JA',
-                phone: '020 7946 0532',
-            },
-        };
-    }
+    // function createVerificationDetails() {
+    //     return {
+    //         amount: '100.00',
+    //         currencyCode: 'USD',
+    //         intent: 'CHARGE',
+    //         billingContact: {
+    //             familyName: 'Smith',
+    //             givenName: 'John',
+    //             email: 'jsmith@example.com',
+    //             country: 'GB',
+    //             city: 'London',
+    //             addressLines: ["1235 Emperor's Gate"],
+    //             postalCode: 'SW7 4JA',
+    //             phone: '020 7946 0532',
+    //         },
+    //     };
+    // }
 
     return (
+        <>
         <SquarePaymentForm
             sandbox={true}
             applicationId={APPLICATION_ID}
             locationId={LOCATION_ID}
             cardNonceResponseReceived={cardNonceResponseReceived}
             createPaymentRequest={createPaymentRequest}
-            createVerificationDetails={createVerificationDetails}
         >
             <fieldset className="sq-fieldset">
-                <CreditCardNumberInput />
+                <CreditCardNumberInput/>
 
                 <div className="sq-form-third">
                     <CreditCardExpirationDateInput />
@@ -114,6 +107,8 @@ const PaymentPage = () => {
                 ))}
             </div>
         </SquarePaymentForm>
+        {loading ? <progress class="progress is-small is-primary"/> : null}
+        </>
     );
 };
 

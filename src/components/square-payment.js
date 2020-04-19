@@ -10,8 +10,8 @@ import {
 } from 'react-square-payment-form';
 import 'react-square-payment-form/lib/default.css';
 
-const APPLICATION_ID = 'sandbox-sq0idb-x0bV_9Wr6Jt5NqrJ8rfOmA';
-const LOCATION_ID = 'TMFB84WRJX7JS';
+const APPLICATION_ID = process.env.REACT_APP_APPLICATION_ID;
+const LOCATION_ID = process.env.REACT_APP_LOCATION_ID;
 
 const PaymentPage = (props) => {
     const state = useContext(ApplicationContext);
@@ -27,12 +27,12 @@ const PaymentPage = (props) => {
         setErrorMessages([]);
 
         setLoading(true)
-        fetch('https://doughboys-pizza-express.herokuapp.com/payments', {
+        fetch('http://localhost:8080/complete-order', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({nonce: nonce, buyerVerificationToken: buyerVerificationToken}),
+            body: JSON.stringify({nonce: nonce, buyerVerificationToken: buyerVerificationToken, order: state.order, orderPlacer: props.orderPlacer }),
         })
         .then((response) => {
            return response.json(); 
@@ -41,39 +41,6 @@ const PaymentPage = (props) => {
             props.orderReceipt.setOrderReceipt(data);
         })
     }
-
-    function createPaymentRequest() {
-        return {
-            requestShippingAddress: false,
-            requestBillingInfo: true,
-            currencyCode: 'USD',
-            countryCode: 'US',
-            total: {
-                label: 'MERCHANT NAME',
-                amount: state.order.orderTotal,
-                pending: false,
-            },
-        };
-    }
-
-    // function createVerificationDetails() {
-    //     return {
-    //         amount: '100.00',
-    //         currencyCode: 'USD',
-    //         intent: 'CHARGE',
-    //         billingContact: {
-    //             familyName: 'Smith',
-    //             givenName: 'John',
-    //             email: 'jsmith@example.com',
-    //             country: 'GB',
-    //             city: 'London',
-    //             addressLines: ["1235 Emperor's Gate"],
-    //             postalCode: 'SW7 4JA',
-    //             phone: '020 7946 0532',
-    //         },
-    //     };
-    // }
-
     return (
         <>
         <SquarePaymentForm
@@ -81,7 +48,6 @@ const PaymentPage = (props) => {
             applicationId={APPLICATION_ID}
             locationId={LOCATION_ID}
             cardNonceResponseReceived={cardNonceResponseReceived}
-            createPaymentRequest={createPaymentRequest}
         >
             <fieldset className="sq-fieldset">
                 <CreditCardNumberInput/>

@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react'
-import { PayPalButton } from 'react-paypal-button';
 import ApplicationContext from "../ApplicationContext";
 import {
     Link
@@ -43,6 +42,10 @@ function Checkout() {
                         <div class="control">
                             <input class="input" type="email" placeholder="Valid Email" name="email" value={orderPlacer.email} onChange={handleChange} />
                         </div>
+                        <label class="label">Pick Up Time</label>
+                        <div class="control">
+                            
+                        </div>
                     </div>
                     <h1 className="contact-information-title">Order Summary</h1>
                     <div style={{ marginBottom: "1.15em" }}>
@@ -68,7 +71,7 @@ function Checkout() {
                         && orderPlacer.phone 
                         && emailValidity
                         && phoneValidity
-                        ? <PaymentPage orderReceipt={{orderReceipt,setOrderReceipt}}/>
+                        ? <PaymentPage orderReceipt={{orderReceipt,setOrderReceipt}} orderPlacer={orderPlacer}/>
                         : <div>Please provide contact information before processing payment.</div>}</> 
                     : <><h1 className="contact-information-title">Thank you for your order!</h1>
                         <p>Your order can be picked up at TIME at LOCATION</p>

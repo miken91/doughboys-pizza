@@ -1,8 +1,5 @@
 import React from "react"
 import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
     Link
 } from "react-router-dom";
 
@@ -12,7 +9,7 @@ const Header = () => (
             <div class="column is-2 is-offset-5">
                 <Link to="/">
                     <h1 className="brand-title">Doughboy's</h1>
-                    <h1 className="brand-title">Woodfired Pizza</h1>
+                    <h1 className="brand-title">Wood Fired Pizza</h1>
                 </Link>
                 <div class="level is-mobile">
                 <div class="level-item">

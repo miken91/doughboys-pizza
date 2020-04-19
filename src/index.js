@@ -6,9 +6,6 @@ import ReactNotification from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import {
   BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
 } from "react-router-dom";
 
 ReactDOM.render(

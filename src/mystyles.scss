@@ -74,16 +74,16 @@ body {
 }
 
 .order-summary {
-    height: 60vh;
-    position: sticky;
+    height: 80vh;
     top: 0;
+    position: sticky;
 }
 
 .order-summary-orders {
     overflow-y: auto;
     margin-bottom: 1em;
     padding-bottom: 1em;
-    height: 75%;
+    height: 60%;
 }
 
 .contact-information-title {

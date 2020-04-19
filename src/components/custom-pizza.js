@@ -6,16 +6,37 @@ function CustomPizza(props) {
     const [checkedItems, setCheckedItems] = useState(props.pizza.toppings);
     const [selectedRadioButton, setSelectedRadioButton] = useState(props.pizza.sauceOptions[0]);
     const [additionalComments, setAdditionalComments] = useState("");
+
+    function mapToppingsToSquareModifiers() {
+        return Object.keys(checkedItems).filter(k => {
+            if(props.pizza.type === "Cheese") {
+                if(checkedItems[k]) {
+                    return k === "No Cheese" ? k :"Add " + k;
+                } 
+            } else {
+                if(!checkedItems[k] && k !== "No Cheese") {
+                    return "No " + k;
+                } else if(checkedItems[k] && k === "No Cheese") {
+                    return k
+                }
+            }
+            
+        })
+    }
+
     const handleClick = () => {
         let orders = props.order.order.pizzasOrdered;
-        let total;
+        let pizzaTotal;
         if (props.pizza.type === "Cheese") {
-            total = ((Object.keys(checkedItems).filter(k => checkedItems[k]).length * .50) + 5).toFixed(2);
+            pizzaTotal = ((Object.keys(checkedItems).filter(k => checkedItems[k] && k !== "No Cheese").length * .50) + 7).toFixed(2);
         } else {
-            total = props.pizza.price.toFixed(2);
+            pizzaTotal = props.pizza.price.toFixed(2);
         }
-        orders.push({ type: props.pizza.type, sauce: selectedRadioButton, toppings: Object.keys(checkedItems).filter(k => checkedItems[k]), comments: additionalComments, price: total })
-        props.order.setOrder({ pizzasOrdered: [...orders], orderTotal: (parseFloat(props.order.order.orderTotal) + parseFloat(total)).toFixed(2) })
+        orders.push({ type: props.pizza.type, sauce: selectedRadioButton, toppings: mapToppingsToSquareModifiers(), comments: additionalComments, price: pizzaTotal })
+        let orderSubTotal = (parseFloat(props.order.order.orderSubTotal) + parseFloat(pizzaTotal)).toFixed(2);
+        let orderTax = (parseFloat(orderSubTotal * .08363)).toFixed(2);
+        let orderTotal = (parseFloat(orderSubTotal) + parseFloat(orderTax)).toFixed(2);
+        props.order.setOrder({ pizzasOrdered: [...orders], orderSubTotal: orderSubTotal, orderTax: orderTax, orderTotal: orderTotal})
         if (isMobile) {
             store.addNotification({
                 title: "Item Added",
@@ -32,9 +53,11 @@ function CustomPizza(props) {
         setSelectedRadioButton("Pizza Sauce");
         setAdditionalComments("");
     }
+
     const handleCheckBoxChange = (event) => {
         setCheckedItems({ ...checkedItems, [event.target.name]: event.target.checked });
     }
+
     return (
         <div className="field">
             <h1 className="pizza-title">

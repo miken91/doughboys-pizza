@@ -3,12 +3,15 @@ import ApplicationContext from "../ApplicationContext";
 import {
     Link
 } from "react-router-dom";
+import TimePicker from "rc-time-picker";
+import 'rc-time-picker/assets/index.css';
 import PaymentPage from '../components/square-payment';
+import moment from 'moment';
 
 function Checkout() {
     const state = useContext(ApplicationContext);
     const [orderReceipt, setOrderReceipt] = useState();                              
-    const [orderPlacer, setOrderPlacer] = useState({ name: "", phone: "", email: "" })
+    const [orderPlacer, setOrderPlacer] = useState({ name: "", phone: "", email: "", pickupTime: "" })
     const [emailValidity, setEmailValidity] = useState(false);
     const [phoneValidity, setPhoneValidity] = useState(false);
     const handleChange = e => {
@@ -21,8 +24,17 @@ function Checkout() {
             setEmailValidity(e.target.value.match(/.+@.+/));
         } else if(name === "phone") {
             setPhoneValidity(e.target.value.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/))
-        }
+        } 
     };
+    const format= "hh:mm a"
+    const handlePickupTimeChange =(value) => {
+        setOrderPlacer(prevState => ({
+            ...prevState,
+            pickupTime: value.format(format)
+        }));
+    }
+    
+    const defaultPickupTime = moment().add(15, 'm')
     return (
         <div class="container" style={{ height: "100vh" }}>
             <div class="box">
@@ -44,7 +56,12 @@ function Checkout() {
                         </div>
                         <label class="label">Pick Up Time</label>
                         <div class="control">
-                            
+                            <TimePicker
+                            onChange={handlePickupTimeChange}
+                            format={format}
+                            use12Hours
+                            showSecond={false} 
+                            defaultValue={defaultPickupTime} />
                         </div>
                     </div>
                     <h1 className="contact-information-title">Order Summary</h1>

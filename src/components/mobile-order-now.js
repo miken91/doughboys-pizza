@@ -4,10 +4,19 @@ import ApplicationContext from "../ApplicationContext";
 import {
     Link
 } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 let pizzasForMenu = require('./pizzasForMenu.json');
 function MobileOrderNow() {
     const state = useContext(ApplicationContext);
     const [mobileTab, setMobileTab] = useState(0);
+    const handleDelete = (index) => {
+        let orderSubTotal = (parseFloat(state.order.orderSubTotal) - parseFloat(state.order.pizzasOrdered[index].price)).toFixed(2);
+        let orderTax = (parseFloat(orderSubTotal * .08363)).toFixed(2);
+        let orderTotal = (parseFloat(orderSubTotal) + parseFloat(orderTax)).toFixed(2);
+        state.order.pizzasOrdered.splice(index, 1);
+        state.setOrder({ pizzasOrdered: [...state.order.pizzasOrdered], orderSubTotal: orderSubTotal, orderTax: orderTax, orderTotal: orderTotal })
+    }
     return (
         <div className="mobile">
             <div class="tabs is-centered is-large">
@@ -43,6 +52,9 @@ function MobileOrderNow() {
                                                     <div class="level-right">
                                                         <div class="level-item">
                                                             <h1>{pizza.price}</h1>
+                                                        </div>
+                                                        <div class="level-item">
+                                                            <FontAwesomeIcon icon={faTrash} onClick={() => handleDelete(i)} />
                                                         </div>
                                                     </div>
                                                 </div>

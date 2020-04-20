@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import ApplicationContext from './ApplicationContext';
 import Checkout from './pages/checkout';
+import Contact from './pages/contact';
 
 function App() {
   const [order, setOrder] = useState({pizzasOrdered: [], orderTotal: 0.00, orderSubTotal: 0.00, orderTax: 0.00})
@@ -22,6 +23,9 @@ function App() {
           <Route path="/checkout">
             {order.orderTotal !== 0 ?
             <Checkout/> : <Redirect to="/order-now"/>}
+          </Route>
+          <Route path="/contact">
+            <Contact/>
           </Route>
           <Route path="/">
             <HomePage/>

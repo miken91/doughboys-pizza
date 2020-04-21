@@ -35,13 +35,11 @@ const PaymentPage = (props) => {
             body: JSON.stringify({ nonce: nonce, buyerVerificationToken: buyerVerificationToken, order: state.order, orderPlacer: props.orderPlacer }),
         })
             .then((response) => {
-                return response.json();
-            }).then((data) => {
-                setLoading(false)
-                if (data.status === "200") {
-                    props.orderReceipt.setOrderReceipt(data);
+                setLoading(false);
+                if(response.ok){
+                    props.orderReceipt.setOrderReceipt(response)
                 } else {
-                    setErrorMessages(["An Error Has Occured Please Try Again."])
+                    setErrorMessages(['An Error Has Occured Please Try Again'])
                 }
             })
     }

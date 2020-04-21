@@ -31,7 +31,7 @@ function mapRequestToOrder(body) {
         modifiers.push({catalog_object_id: modifier.id})
       }
     });
-    line_items.push({ "catalog_object_id": item_id[0], modifiers: modifiers, "quantity": "1" })
+    line_items.push({ "catalog_object_id": item_id[0], modifiers: modifiers, "quantity": "1", note: pizza.comments })
   });
   const today = new Date()
   const tomorrow = new Date(today)
@@ -42,7 +42,9 @@ function mapRequestToOrder(body) {
       state: "PROPOSED",
       pickup_details: {
         recipient: {
-          display_name: body.orderPlacer.name
+          display_name: body.orderPlacer.name,
+          email_address: body.orderPlacer.email,
+          phone_number:body.orderPlacer.phone.length === 10 ? "1" + body.orderPlacer.phone : body.orderPlacer.phone
         },
         expires_at: tomorrow.toISOString(),
         schedule_type: "SCHEDULED",
@@ -60,7 +62,7 @@ function mapRequestToOrder(body) {
   return { line_items: line_items, fulfillments: fulfillments, taxes: taxes }
 }
 
-function createOrder(req, res) {
+function createOrder(req, res, next) {
   var body = new squareConnect.CreateOrderRequest();
   body.order = mapRequestToOrder(req.body)
   body.idempotency_key = uuidv4()
@@ -76,10 +78,10 @@ function createOrder(req, res) {
     payments_api.createPayment(payment_body).then(function (data) {
       res.send(JSON.stringify(data));
     }, function (error) {
-      res.send(error)
+      res.status(400).send(error);
     })
   }, function (error) {
-    res.send(error)
+    res.status(400).send(error);
   })
 }
 
@@ -103,5 +105,5 @@ app.post('/complete-order', async function (req, res) {
 })
 
 app.listen(port, function () {
-  console.log('Example app listening on port ' + port);
+  console.log('Application running on port: ' + port);
 });

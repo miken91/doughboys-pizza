@@ -27,7 +27,7 @@ const PaymentPage = (props) => {
         setErrorMessages([]);
 
         setLoading(true)
-        fetch('https://doughboys-pizza-express.herokuapp.com/complete-order', {
+        fetch('/complete-order', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

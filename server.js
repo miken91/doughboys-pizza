@@ -46,7 +46,7 @@ function mapRequestToOrder(body) {
         },
         expires_at: tomorrow.toISOString(),
         schedule_type: "SCHEDULED",
-        pickup_at: today.toISOString()
+        pickup_at: body.orderPlacer.pickupTime
       }
     }
   ]
@@ -76,10 +76,10 @@ function createOrder(req, res) {
     payments_api.createPayment(payment_body).then(function (data) {
       res.send(JSON.stringify(data));
     }, function (error) {
-      console.log(error)
+      res.send(error)
     })
   }, function (error) {
-    console.log(error)
+    res.send(error)
   })
 }
 

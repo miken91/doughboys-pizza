@@ -108,6 +108,11 @@ body {
   }
 }
 
+.payment-error-message {
+    color: $red;
+    font-size: 1.5em;
+}
+
 #sq-payment-form {
     width: 100%
 }

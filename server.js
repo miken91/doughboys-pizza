@@ -6,6 +6,7 @@ const {v4: uuidv4} = require('uuid');
 var squareConnect = require('square-connect');
 var port = process.env.PORT || 8080;
 var app = express();
+app.use(express.static(path.join(__dirname, 'client/build')));
 app.use(express.json());
 app.use(cors())
 const defaultClient = squareConnect.ApiClient.instance;

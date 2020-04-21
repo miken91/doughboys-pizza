@@ -23,8 +23,12 @@ function DesktopOrderNow() {
                 <div class="column is-8 is-mobile">
                     <div class="columns">
                         <div class="column is-8 is-mobile">
+                            <h1 class="title">Build Your Own</h1>
                             {pizzasForMenu.Pizzas.map((pizza, i) =>
+                            <>
+                                {i === 1 ? <h1 class="title" style={{marginTop: "1.5em"}}>Speciality Pizzas</h1> : null}
                                 <CustomPizza order={{ order: state.order, setOrder: state.setOrder }} pizza={pizza} />
+                            </>
                             )}
                         </div>
                     </div>
@@ -48,7 +52,7 @@ function DesktopOrderNow() {
                                                 </div>
                                                 <div class="level-right">
                                                     <div class="level-item">
-                                                        <h1>{pizza.price}</h1>
+                                                        <h1>${pizza.price}</h1>
                                                     </div>
                                                     <div class="level-item">
                                                         <FontAwesomeIcon icon={faTrash} onClick={() => handleDelete(i)} />
@@ -74,7 +78,7 @@ function DesktopOrderNow() {
                                 </div>
                                 <div class="level-right">
                                     <div class="level-item">
-                                        <div>{parseFloat(state.order.orderTax).toFixed(2)}</div>
+                                        <div>${parseFloat(state.order.orderTax).toFixed(2)}</div>
                                     </div>
                                 </div>
                             </div>
@@ -86,7 +90,7 @@ function DesktopOrderNow() {
                                 </div>
                                 <div class="level-right">
                                     <div class="level-item">
-                                        <div>{parseFloat(state.order.orderTotal).toFixed(2)}</div>
+                                        <div>${parseFloat(state.order.orderTotal).toFixed(2)}</div>
                                     </div>
                                 </div>
                             </div>

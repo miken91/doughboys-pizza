@@ -11,7 +11,7 @@ import {
 ReactDOM.render(
   <Router>
     <ReactNotification/>
-    <App />
+    <App/>
   </Router>,
   document.getElementById('root')
 );

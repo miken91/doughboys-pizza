@@ -13,9 +13,6 @@ $primary: $green;
     font-weight: bold;
     color: $red
 }
-#gatsby-focus-wrapper {
-    height: 100%;
-}
 
 .header {
     padding-bottom: 1.25em;
@@ -89,6 +86,13 @@ body {
 .contact-information-title {
     font-size: 1.15em;
     font-weight: bold;
+}
+
+.mobile-menu {
+    position: sticky;
+    top: 0;
+    background-color: $light;
+    z-index: 100;
 }
 
 .viewport-toggle {

@@ -19,17 +19,23 @@ function MobileOrderNow() {
     }
     return (
         <div className="mobile">
-            <div class="tabs is-centered is-large">
-                <ul>
-                    <li class={mobileTab === 0 ? "is-active" : ""}><a onClick={() => { setMobileTab(0) }}>Menu</a></li>
-                    <li class={mobileTab === 1 ? "is-active" : ""}><a onClick={() => { setMobileTab(1) }}>Cart</a></li>
-                </ul>
+            <div className="mobile-menu">
+                <div class="tabs is-centered is-large">
+                    <ul>
+                        <li class={mobileTab === 0 ? "is-active" : ""}><a onClick={() => { setMobileTab(0) }}>Menu</a></li>
+                        <li class={mobileTab === 1 ? "is-active" : ""}><a onClick={() => { setMobileTab(1) }}>Cart</a></li>
+                    </ul>
+                </div>
             </div>
             <div class="box">
                 {mobileTab === 0 ?
                     <>
+                        <h1 class="title">Build Your Own</h1>
                         {pizzasForMenu.Pizzas.map((pizza, i) =>
+                            <>
+                            {i === 1 ? <h1 class="title">Speciality Pizzas</h1> : null}
                             <CustomPizza order={{ order: state.order, setOrder: state.setOrder }} pizza={pizza} />
+                            </>
                         )}
                     </> :
                     <>
@@ -51,7 +57,7 @@ function MobileOrderNow() {
                                                     </div>
                                                     <div class="level-right">
                                                         <div class="level-item">
-                                                            <h1>{pizza.price}</h1>
+                                                            <h1>${pizza.price}</h1>
                                                         </div>
                                                         <div class="level-item">
                                                             <FontAwesomeIcon icon={faTrash} onClick={() => handleDelete(i)} />
@@ -77,7 +83,7 @@ function MobileOrderNow() {
                                     </div>
                                     <div class="level-right">
                                         <div class="level-item">
-                                            <div>{state.order.orderTax}</div>
+                                            <div>${parseFloat(state.order.orderTax).toFixed(2)}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -89,15 +95,15 @@ function MobileOrderNow() {
                                     </div>
                                     <div class="level-right">
                                         <div class="level-item">
-                                            <div>{state.order.orderTotal}</div>
+                                            <div>${parseFloat(state.order.orderTotal).toFixed(2)}</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="level is-mobile">
                                     <div class="level-right">
-                                        <Link to="/checkout">
+                                        {parseInt(state.order.orderTotal) !== 0 ? <Link to="/checkout">
                                             <button class="button is-primary">Place Order</button>
-                                        </Link>
+                                        </Link> : null}
                                     </div>
                                 </div>
                             </div>

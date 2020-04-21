@@ -8,20 +8,24 @@ function CustomPizza(props) {
     const [additionalComments, setAdditionalComments] = useState("");
 
     function mapToppingsToSquareModifiers() {
-        return Object.keys(checkedItems).filter(k => {
+        let toppings = [];
+        Object.keys(props.pizza.toppings).forEach(topping => {
             if(props.pizza.type === "Cheese") {
-                if(checkedItems[k]) {
-                    return k === "No Cheese" ? k :"Add " + k;
+                if(checkedItems[topping]) {
+                    toppings.push(topping === "No Cheese" ? topping :"Add " + topping);
                 } 
             } else {
-                if(!checkedItems[k] && k !== "No Cheese") {
-                    return "No " + k;
-                } else if(checkedItems[k] && k === "No Cheese") {
-                    return k
+                if(!checkedItems[topping] && topping !== "No Cheese") {
+                    toppings.push("No " + topping);
+                } else if(checkedItems[topping] && topping === "No Cheese") {
+                    toppings.push(topping);
                 }
-            }
-            
-        })
+            }  
+        });
+        if(props.pizza.type === "Cheese") {
+            toppings.push("Add " + selectedRadioButton);
+        }
+        return toppings
     }
 
     const handleClick = () => {
@@ -29,8 +33,6 @@ function CustomPizza(props) {
         let pizzaTotal;
         if (props.pizza.type === "Cheese") {
             pizzaTotal = ((Object.keys(checkedItems).filter(k => checkedItems[k] && k !== "No Cheese").length * .50) + 7).toFixed(2);
-        } else {
-            pizzaTotal = props.pizza.price.toFixed(2);
         }
         orders.push({ type: props.pizza.type, sauce: selectedRadioButton, toppings: mapToppingsToSquareModifiers(), comments: additionalComments, price: pizzaTotal })
         let orderSubTotal = (parseFloat(props.order.order.orderSubTotal) + parseFloat(pizzaTotal)).toFixed(2);
@@ -59,24 +61,26 @@ function CustomPizza(props) {
     }
 
     return (
-        <div className="field">
+        <div className="field" style={{marginBottom: "2em"}}>
             <h1 className="pizza-title">
                 {props.pizza.type} - {props.pizza.price}
             </h1>
-            <label class="label">Sauce</label>
             {props.pizza.sauceOptions.length > 1 ?
-                <div class="control">
-                    {props.pizza.sauceOptions.map((sauce) =>
-                        <>
-                            <label class="radio">
-                                <input type="radio" value={sauce} checked={selectedRadioButton === sauce} onChange={(event) => setSelectedRadioButton(event.target.value)} />
-                                {sauce}
-                            </label>
-                        </>
-                    )}
-                </div>
-                : <div>{props.pizza.sauceOptions[0]}</div>}
-            <label class="label">Toppings {props.pizza.type === "Cheese" ? "- 0.50" : ""}</label>
+                <>
+                    <label class="label">Sauce</label>
+                    <div class="control">
+                        {props.pizza.sauceOptions.map((sauce) =>
+                            <>
+                                <label class="radio">
+                                    <input type="radio" value={sauce} checked={selectedRadioButton === sauce} onChange={(event) => setSelectedRadioButton(event.target.value)} />
+                                    {sauce}
+                                </label>
+                            </>
+                        )}
+                    </div>
+                </>
+                : null}
+            <label class="label">{props.pizza.type === "Cheese" ? "Add toppings .50 each" : props.pizza.sauceOptions[0] + " with checked toppings below."}</label>
             <div class="field is-grouped is-grouped-multiline">
                 {Object.keys(props.pizza.toppings).map((topping) =>
                     <div class="control">

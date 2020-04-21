@@ -23,7 +23,7 @@ function CustomPizza(props) {
             }  
         });
         if(props.pizza.type === "Cheese") {
-            toppings.push("Add " + selectedRadioButton);
+            toppings.push(selectedRadioButton);
         }
         return toppings
     }

@@ -92,7 +92,7 @@ function Checkout() {
                         ? <PaymentPage orderReceipt={{orderReceipt,setOrderReceipt}} orderPlacer={orderPlacer}/>
                         : <div>Please provide contact information before processing payment.</div>}</> 
                     : <><h1 className="contact-information-title">Thank you for your order!</h1>
-                        <p>Your order can be picked up at {orderPlacer.pickupTime}</p>
+                        <p>Your order can be picked up at {orderPlacer.pickupTime.format(format)}</p>
                         <p>Your card was charged ${state.order.orderTotal}</p></>}
                 </div>
             </div>

@@ -1,4 +1,5 @@
 import React from "react";
+import Img from "react-image";
 import {
     Link
 } from "react-router-dom";
@@ -10,7 +11,7 @@ const HomePage = () => {
                 <div class="columns">
                     <div class="column is-9">
                         <figure class="image is-4-by-3">
-                            <img alt="pizza-truck" src={require("./doughboys-new.jpg")}/>
+                            <Img alt="pizza-truck" src={require("./doughboys-new.jpg")}/>
                         </figure>
                     </div>
                     <div class="column is-3">

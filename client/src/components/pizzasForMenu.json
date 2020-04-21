@@ -3,7 +3,7 @@
         {
             "type" : "Cheese",
             "price" : 7,
-            "sauceOptions" : ["Pizza Sauce", "Ranch Based Sauce", "Sweet heat sauce"],
+            "sauceOptions" : ["Pizza Sauce", "Ranch Based Sauce", "Sweet Heat Sauce"],
             "toppings" : {"Pepperoni" : false, "Sausage" : false, "Bacon" : false, "Grilled Garlic Chicken" : false, "Buffalo Chicken" : false, "Hickory Smoked Ham" : false, "Portabella Mushroom" : false, "Jalapenos" : false, "Green Bell Peppers" : false, "Red Onions" : false, "Green Olives" : false, "Black Olives" : false, "Tomatoes" : false, "Pineapple" : false, "Feta Cheese" : false, "No Cheese" : false}
         },
         {

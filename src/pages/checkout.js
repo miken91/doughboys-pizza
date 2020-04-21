@@ -10,8 +10,9 @@ import moment from 'moment';
 
 function Checkout() {
     const state = useContext(ApplicationContext);
-    const [orderReceipt, setOrderReceipt] = useState();                              
-    const [orderPlacer, setOrderPlacer] = useState({ name: "", phone: "", email: "", pickupTime: "" })
+    const [orderReceipt, setOrderReceipt] = useState();     
+    const defaultPickupTime = moment().add(15, 'm')                         
+    const [orderPlacer, setOrderPlacer] = useState({ name: "", phone: "", email: "", pickupTime: defaultPickupTime })
     const [emailValidity, setEmailValidity] = useState(false);
     const [phoneValidity, setPhoneValidity] = useState(false);
     const handleChange = e => {
@@ -30,11 +31,10 @@ function Checkout() {
     const handlePickupTimeChange =(value) => {
         setOrderPlacer(prevState => ({
             ...prevState,
-            pickupTime: value.format(format)
+            pickupTime: value ? value.format(format) : ""
         }));
     }
     
-    const defaultPickupTime = moment().add(15, 'm')
     return (
         <div class="container" style={{ height: "100vh" }}>
             <div class="box">
@@ -85,15 +85,15 @@ function Checkout() {
                     </div>
                     {orderPlacer.name
                         && orderPlacer.email
-                        && orderPlacer.phone 
+                        && orderPlacer.phone
+                        && orderPlacer.pickupTime
                         && emailValidity
                         && phoneValidity
                         ? <PaymentPage orderReceipt={{orderReceipt,setOrderReceipt}} orderPlacer={orderPlacer}/>
                         : <div>Please provide contact information before processing payment.</div>}</> 
                     : <><h1 className="contact-information-title">Thank you for your order!</h1>
-                        <p>Your order can be picked up at TIME at LOCATION</p>
-                        <p>Your card was charged ${state.order.orderTotal}</p>
-                        <p>A confirmation email has been sent to {orderPlacer.email}</p></>}
+                        <p>Your order can be picked up at {orderPlacer.pickupTime}</p>
+                        <p>Your card was charged ${state.order.orderTotal}</p></>}
                 </div>
             </div>
         </div>

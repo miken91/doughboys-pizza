@@ -7,7 +7,6 @@ const {v4: uuidv4} = require('uuid');
 var squareConnect = require('square-connect');
 var port = process.env.PORT || 8080;
 var app = express();
-app.use(express.static(path.join(__dirname, 'client/build')));
 app.use(express.json());
 app.use(cors())
 const defaultClient = squareConnect.ApiClient.instance;
@@ -103,6 +102,15 @@ app.post('/complete-order', async function (req, res) {
   }
   createOrder(req,res);
 })
+
+if (process.env.NODE_ENV === 'production') {
+  // Serve any static files
+  app.use(express.static(path.join(__dirname, 'client/build')));
+// Handle React routing, return all requests to React app
+  app.get('*', function(req, res) {
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+  });
+}
 
 app.listen(port, function () {
   console.log('Application running on port: ' + port);

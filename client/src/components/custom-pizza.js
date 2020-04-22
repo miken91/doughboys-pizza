@@ -33,6 +33,8 @@ function CustomPizza(props) {
         let pizzaTotal;
         if (props.pizza.type === "Cheese") {
             pizzaTotal = ((Object.keys(checkedItems).filter(k => checkedItems[k] && k !== "No Cheese").length * .50) + 7).toFixed(2);
+        } else {
+            pizzaTotal = props.pizza.price.toFixed(2);
         }
         orders.push({ type: props.pizza.type, sauce: selectedRadioButton, toppings: mapToppingsToSquareModifiers(), comments: additionalComments, price: pizzaTotal })
         let orderSubTotal = (parseFloat(props.order.order.orderSubTotal) + parseFloat(pizzaTotal)).toFixed(2);

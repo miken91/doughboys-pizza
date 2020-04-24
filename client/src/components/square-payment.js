@@ -17,7 +17,19 @@ const PaymentPage = (props) => {
     const state = useContext(ApplicationContext);
     const [loading, setLoading] = useState(false);
     const [errorMessages, setErrorMessages] = useState([]);
-
+    const handleAddTip = (value) => {
+        state.setOrder((prevState => ({
+            ...prevState,
+            orderTip: parseFloat(value * state.order.orderTotal).toFixed(2)
+        })))
+    }
+    const evaluateAndReturnTotal = () => {
+        if(state.order.orderTip) {
+            return parseFloat(state.order.orderTotal) + parseFloat(state.order.orderTip)
+        } else {
+            return state.order.orderTotal
+        }
+    }
     function cardNonceResponseReceived(errors, nonce, cardData, buyerVerificationToken) {
         if (errors) {
             setErrorMessages(errors.map(error => error.message));
@@ -36,7 +48,7 @@ const PaymentPage = (props) => {
         })
             .then((response) => {
                 setLoading(false);
-                if(response.ok){
+                if (response.ok) {
                     props.orderReceipt.setOrderReceipt(response)
                 } else {
                     setErrorMessages(['An Error Has Occured Please Try Again'])
@@ -65,9 +77,26 @@ const PaymentPage = (props) => {
                     <div className="sq-form-third">
                         <CreditCardCVVInput />
                     </div>
-                </fieldset>
 
-                <CreditCardSubmitButton>Submit Payment</CreditCardSubmitButton>
+                </fieldset>
+                <div class="columns">
+                    <div class="column">
+                        <span class="sq-label">Tip Amount</span>
+                        <div class="columns is-mobile">
+                            <div class="column is-one-third">
+                                <button onClick={()=> handleAddTip(.18)} class="sq-creditcard">18%</button>
+                            </div>
+                            <div class="column is-one-third">
+                                <button onClick={()=> handleAddTip(.20)} class="sq-creditcard">20%</button>
+                            </div>
+                            <div class="column is-one-third">
+                                <button onClick={()=> handleAddTip(.22)} class="sq-creditcard">22%</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <CreditCardSubmitButton>Submit Order And Pay ${evaluateAndReturnTotal()}</CreditCardSubmitButton>
 
                 <div className="sq-error-message">
                     {errorMessages.map(errorMessage => (

@@ -3,7 +3,7 @@ var path = require('path');
 require('dotenv').config();
 var cors = require('cors');
 var cache = require('memory-cache');
-const {v4: uuidv4} = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 var squareConnect = require('square-connect');
 var port = process.env.PORT || 8080;
 var app = express();
@@ -26,8 +26,8 @@ function mapRequestToOrder(body) {
     ).map(item => item.item_data.variations[0].id);
     const modifiers = [];
     catalog_modifiers.forEach(modifier => {
-      if(pizza.toppings.includes(modifier.modifier_data.name)){
-        modifiers.push({catalog_object_id: modifier.id})
+      if (pizza.toppings.includes(modifier.modifier_data.name)) {
+        modifiers.push({ catalog_object_id: modifier.id })
       }
     });
     line_items.push({ "catalog_object_id": item_id[0], modifiers: modifiers, "quantity": "1", note: pizza.comments })
@@ -43,7 +43,7 @@ function mapRequestToOrder(body) {
         recipient: {
           display_name: body.orderPlacer.name,
           email_address: body.orderPlacer.email,
-          phone_number:body.orderPlacer.phone.length === 10 ? "1" + body.orderPlacer.phone : body.orderPlacer.phone
+          phone_number: body.orderPlacer.phone.length === 10 ? "1" + body.orderPlacer.phone : body.orderPlacer.phone
         },
         expires_at: tomorrow.toISOString(),
         schedule_type: "SCHEDULED",
@@ -68,11 +68,22 @@ function createOrder(req, res, next) {
   const orders_api = new squareConnect.OrdersApi()
   const payments_api = new squareConnect.PaymentsApi()
   orders_api.createOrder(process.env.SQLOCATIONID, body).then(function (data) {
-    const payment_body = {
-      idempotency_key: uuidv4(),
-      amount_money: data.order.total_money,
-      source_id: req.body.nonce,
-      order_id: data.order.id
+    let payment_body = {}
+    if (req.body.order.orderTip) {
+      payment_body = {
+        idempotency_key: uuidv4(),
+        amount_money: data.order.total_money,
+        tip_money: { amount: parseFloat(req.body.order.orderTip * 100), currency: "USD" },
+        source_id: req.body.nonce,
+        order_id: data.order.id
+      }
+    } else {
+      payment_body = {
+        idempotency_key: uuidv4(),
+        amount_money: data.order.total_money,
+        source_id: req.body.nonce,
+        order_id: data.order.id
+      }
     }
     payments_api.createPayment(payment_body).then(function (data) {
       res.send(JSON.stringify(data));
@@ -91,7 +102,7 @@ app.post('/complete-order', async function (req, res) {
     catalog_modifiers = data.objects[24].modifier_list_data.modifiers;
     tax = data.objects.filter(exports => exports.type === "TAX");
   } else {
-      await catalog_api.listCatalog().then(function (data) {
+    await catalog_api.listCatalog().then(function (data) {
       cache.put("catalog", data);
       catalog = data.objects.filter(exports => exports.type === "ITEM");
       catalog_modifiers = data.objects[24].modifier_list_data.modifiers;
@@ -100,14 +111,14 @@ app.post('/complete-order', async function (req, res) {
       console.log(error)
     });
   }
-  createOrder(req,res);
+  createOrder(req, res);
 })
 
 if (process.env.NODE_ENV === 'production') {
   // Serve any static files
   app.use(express.static(path.join(__dirname, 'client/build')));
-// Handle React routing, return all requests to React app
-  app.get('*', function(req, res) {
+  // Handle React routing, return all requests to React app
+  app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
   });
 }

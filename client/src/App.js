@@ -12,9 +12,10 @@ import Checkout from './pages/checkout';
 import Contact from './pages/contact';
 
 function App() {
-  const [order, setOrder] = useState({pizzasOrdered: [], orderTotal: 0.00, orderSubTotal: 0.00, orderTax: 0.00})
+  const [order, setOrder] = useState({pizzasOrdered: [], orderTotal: 0.00, orderSubTotal: 0.00, orderTax: 0.00, orderTip: 0.00})
   return (
     <ApplicationContext.Provider value={{order, setOrder}}>
+      
       <Layout>
         <Switch>
           <Route path="/order-now">

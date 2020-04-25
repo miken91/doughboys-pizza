@@ -60,7 +60,6 @@ const PaymentPage = (props) => {
     return (
         <>
             <SquarePaymentForm
-                sandbox={true}
                 applicationId={APPLICATION_ID}
                 locationId={LOCATION_ID}
                 cardNonceResponseReceived={cardNonceResponseReceived}

@@ -99,13 +99,13 @@ app.post('/complete-order', async function (req, res) {
   if (cache.get("catalog")) {
     data = cache.get("catalog")
     catalog = data.objects.filter(exports => exports.type === "ITEM");
-    catalog_modifiers = data.objects[24].modifier_list_data.modifiers;
+    catalog_modifiers = data.objects[22].modifier_list_data.modifiers;
     tax = data.objects.filter(exports => exports.type === "TAX");
   } else {
     await catalog_api.listCatalog().then(function (data) {
       cache.put("catalog", data);
       catalog = data.objects.filter(exports => exports.type === "ITEM");
-      catalog_modifiers = data.objects[24].modifier_list_data.modifiers;
+      catalog_modifiers = data.objects[22].modifier_list_data.modifiers;
       tax = data.objects.filter(exports => exports.type === "TAX");
     }, function (error) {
       console.log(error)

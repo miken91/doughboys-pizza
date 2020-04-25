@@ -10,13 +10,14 @@ var app = express();
 app.use(express.json());
 app.use(cors())
 const defaultClient = squareConnect.ApiClient.instance;
-defaultClient.basePath = 'https://connect.squareupsandbox.com'
+defaultClient.basePath = process.env.SQ_BASE_PATH
 oauth2 = defaultClient.authentications['oauth2'];
 oauth2.accessToken = process.env.SQACCESSTOKEN;
 const catalog_api = new squareConnect.CatalogApi();
 let catalog;
 let tax;
 let catalog_modifiers;
+
 
 function mapRequestToOrder(body) {
   let line_items = [];
@@ -45,7 +46,6 @@ function mapRequestToOrder(body) {
           email_address: body.orderPlacer.email,
           phone_number: body.orderPlacer.phone.length === 10 ? "1" + body.orderPlacer.phone : body.orderPlacer.phone
         },
-        expires_at: tomorrow.toISOString(),
         schedule_type: "SCHEDULED",
         pickup_at: body.orderPlacer.pickupTime
       }
@@ -67,22 +67,22 @@ function createOrder(req, res, next) {
   body.idempotency_key = uuidv4()
   const orders_api = new squareConnect.OrdersApi()
   const payments_api = new squareConnect.PaymentsApi()
-  orders_api.createOrder(process.env.SQLOCATIONID, body).then(function (data) {
+  orders_api.createOrder(process.env.SQLOCATIONID, body).then(function (orderData) {
     let payment_body = {}
     if (req.body.order.orderTip) {
       payment_body = {
         idempotency_key: uuidv4(),
-        amount_money: data.order.total_money,
+        amount_money: orderData.order.total_money,
         tip_money: { amount: parseFloat(req.body.order.orderTip * 100), currency: "USD" },
         source_id: req.body.nonce,
-        order_id: data.order.id
+        order_id: orderData.order.id
       }
     } else {
       payment_body = {
         idempotency_key: uuidv4(),
-        amount_money: data.order.total_money,
+        amount_money: orderData.order.total_money,
         source_id: req.body.nonce,
-        order_id: data.order.id
+        order_id: orderData.order.id
       }
     }
     payments_api.createPayment(payment_body).then(function (data) {
@@ -123,6 +123,6 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.listen(port, function () {
+server.listen(port, function () {
   console.log('Application running on port: ' + port);
 });

@@ -37,10 +37,8 @@ function CustomPizza(props) {
             pizzaTotal = props.pizza.price.toFixed(2);
         }
         orders.push({ type: props.pizza.type, sauce: selectedRadioButton, toppings: mapToppingsToSquareModifiers(), comments: additionalComments, price: pizzaTotal })
-        let orderSubTotal = (parseFloat(props.order.order.orderSubTotal) + parseFloat(pizzaTotal)).toFixed(2);
-        let orderTax = (parseFloat(orderSubTotal * .08363)).toFixed(2);
-        let orderTotal = (parseFloat(orderSubTotal) + parseFloat(orderTax)).toFixed(2);
-        props.order.setOrder({ pizzasOrdered: [...orders], orderSubTotal: orderSubTotal, orderTax: orderTax, orderTotal: orderTotal})
+        let orderTotal = (parseFloat(props.order.order.orderTotal) + parseFloat(pizzaTotal)).toFixed(2);
+        props.order.setOrder({ pizzasOrdered: [...orders], orderTotal: orderTotal})
         if (isMobile) {
             store.addNotification({
                 title: "Item Added",

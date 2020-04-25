@@ -11,11 +11,9 @@ function MobileOrderNow() {
     const state = useContext(ApplicationContext);
     const [mobileTab, setMobileTab] = useState(0);
     const handleDelete = (index) => {
-        let orderSubTotal = (parseFloat(state.order.orderSubTotal) - parseFloat(state.order.pizzasOrdered[index].price)).toFixed(2);
-        let orderTax = (parseFloat(orderSubTotal * .08363)).toFixed(2);
-        let orderTotal = (parseFloat(orderSubTotal) + parseFloat(orderTax)).toFixed(2);
+        let orderTotal = (parseFloat(state.order.orderTotal) - parseFloat(state.order.pizzasOrdered[index].price)).toFixed(2);
         state.order.pizzasOrdered.splice(index, 1);
-        state.setOrder({ pizzasOrdered: [...state.order.pizzasOrdered], orderSubTotal: orderSubTotal, orderTax: orderTax, orderTotal: orderTotal })
+        state.setOrder({ pizzasOrdered: [...state.order.pizzasOrdered], orderTotal: orderTotal })
     }
     return (
         <div className="mobile">
@@ -75,18 +73,6 @@ function MobileOrderNow() {
                                 </> : null}
                             </div>
                             <div>
-                                <div class="level is-mobile">
-                                    <div class="level-left">
-                                        <div class="level-item">
-                                            <div className="order-summary-pizza-title">Tax</div>
-                                        </div>
-                                    </div>
-                                    <div class="level-right">
-                                        <div class="level-item">
-                                            <div>${parseFloat(state.order.orderTax).toFixed(2)}</div>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="level is-mobile">
                                     <div class="level-left">
                                         <div class="level-item">

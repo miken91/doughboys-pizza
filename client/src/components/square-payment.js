@@ -25,7 +25,7 @@ const PaymentPage = (props) => {
     }
     const evaluateAndReturnTotal = () => {
         if(state.order.orderTip) {
-            return parseFloat(state.order.orderTotal) + parseFloat(state.order.orderTip)
+            return (parseFloat(state.order.orderTotal) + parseFloat(state.order.orderTip)).toFixed(2);
         } else {
             return state.order.orderTotal
         }
@@ -50,6 +50,8 @@ const PaymentPage = (props) => {
                 setLoading(false);
                 if (response.ok) {
                     props.orderReceipt.setOrderReceipt(response)
+                    window.scrollTo(0,0);
+
                 } else {
                     setErrorMessages(['An Error Has Occured Please Try Again'])
                 }

@@ -11,10 +11,11 @@ import moment from 'moment';
 function Checkout() {
     const state = useContext(ApplicationContext);
     const [orderReceipt, setOrderReceipt] = useState();
-    const defaultPickupTime = moment().add(15, 'm')
+    const defaultPickupTime = moment().hour(17).minute(0)
     const [orderPlacer, setOrderPlacer] = useState({ name: "", phone: "", email: "", pickupTime: defaultPickupTime })
     const [emailValidity, setEmailValidity] = useState(false);
     const [phoneValidity, setPhoneValidity] = useState(false);
+    const [timeValidity, setTimeValidity] = useState(true);
     const handleChange = e => {
         const { name, value } = e.target;
         setOrderPlacer(prevState => ({
@@ -31,16 +32,38 @@ function Checkout() {
     const handlePickupTimeChange = (value) => {
         setOrderPlacer(prevState => ({
             ...prevState,
-            pickupTime: value ? value.format(format) : ""
+            pickupTime: value ? moment(value) : ""
         }));
+        if(moment(value).isBetween(moment('17:00:00', format),moment('18:15:00', format))) {
+            setTimeValidity(true);
+        } else {
+            setTimeValidity(false);
+        }
+    }
+    const evaluateAndReturnTotal = () => {
+        if(state.order.orderTip) {
+            return (parseFloat(state.order.orderTotal) + parseFloat(state.order.orderTip)).toFixed(2);
+        } else {
+            return state.order.orderTotal
+        }
+    }
+
+    const displayPaymentForm = () => {
+        return orderPlacer.name
+        && orderPlacer.email
+        && orderPlacer.phone
+        && orderPlacer.pickupTime
+        && emailValidity
+        && phoneValidity
+        && timeValidity
     }
 
     return (
         <>
         <div class="notification is-primary" style={{ position: "sticky", top: "0", zIndex: "1", textAlign: "center" }}>
-            <strong>Now taking orders to be picked up only at 17723 Westhampton Woods Drive in St. Louis, MO from 5:30 to 7:30</strong>
+            <strong>Now taking orders to be picked up only at 17723 Westhampton Woods Drive in St. Louis, MO from 5 to 7</strong>
         </div>
-        <div class="container" style={{ height: "100vh" }}>
+        <div class="container" style={{ height: displayPaymentForm() && !orderReceipt ? '115vh' : '100vh'}}>
             <div class="box">
                 <div class="column is-4 is-offset-4">
                     {!orderReceipt ? <>
@@ -77,7 +100,7 @@ function Checkout() {
                                     </div>
                                     <div class="level-item">
                                         {state.order.orderTotal ?
-                                            <div>{state.order.orderTotal}</div> : null}
+                                            <div>${state.order.orderTotal}</div> : null}
                                     </div>
                                 </div>
                                 <div class="level-right">
@@ -87,17 +110,12 @@ function Checkout() {
                                 </div>
                             </div>
                         </div>
-                        {orderPlacer.name
-                            && orderPlacer.email
-                            && orderPlacer.phone
-                            && orderPlacer.pickupTime
-                            && emailValidity
-                            && phoneValidity
+                        {displayPaymentForm()
                             ? <PaymentPage orderReceipt={{ orderReceipt, setOrderReceipt }} orderPlacer={orderPlacer} />
                             : <div>Please provide contact information before processing payment.</div>}</>
                         : <><h1 className="contact-information-title">Thank you for your order!</h1>
                             <p>Your order can be picked up at {orderPlacer.pickupTime.format(format)}</p>
-                            <p>Your card was charged ${state.order.orderTotal}</p></>}
+                        <p>Your card was charged ${evaluateAndReturnTotal()}</p></>}
                 </div>
             </div>
         </div>

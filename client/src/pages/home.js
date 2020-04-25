@@ -8,7 +8,7 @@ const HomePage = () => {
     return (
         <>
             <div class="notification is-primary" style={{ position: "sticky", top: "0", zIndex: "1", textAlign: "center" }}>
-                <strong>Now taking orders to be picked up only at 17723 Westhampton Woods Drive in St. Louis, MO from 5:30 to 7:30</strong>
+                <strong>Now taking orders to be picked up only at 17723 Westhampton Woods Drive in St. Louis, MO from 5 to 7</strong>
             </div>
             <div style={{ height: "80vh" }} class="container">
                 <div class="box">

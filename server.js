@@ -123,6 +123,6 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-server.listen(port, function () {
+app.listen(port, function () {
   console.log('Application running on port: ' + port);
 });

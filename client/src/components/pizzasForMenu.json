@@ -22,7 +22,7 @@
             "type" : "Veggie",
             "price" : 9,
             "sauceOptions" : ["Pizza sauce"],
-            "toppings" : {"Tomatoes" : true, "Green Bell Pepper" : true, "Black Olives" : true,  "Portabella Mushrooms" : true, "Red Onions" : true, "No Cheese" : false}
+            "toppings" : {"Tomatoes" : true, "Green Bell Peppers" : true, "Black Olives" : true,  "Portabella Mushrooms" : true, "Red Onions" : true, "No Cheese" : false}
         },
         {
             "type" : "Supreme",

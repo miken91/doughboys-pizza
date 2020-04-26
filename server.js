@@ -88,9 +88,11 @@ function createOrder(req, res, next) {
     payments_api.createPayment(payment_body).then(function (data) {
       res.send(JSON.stringify(data));
     }, function (error) {
+      console.log(error);
       res.status(400).send(error);
     })
   }, function (error) {
+    console.log(error);
     res.status(400).send(error);
   })
 }

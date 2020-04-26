@@ -46,13 +46,13 @@
             "type" : "Doughboy's Club",
             "price" : 8.50,
             "sauceOptions" : ["Ranch based sauce"],
-            "toppings" : {"Grilled Garlic Chicken" : true, "Bacon": true, "Tomato" : true, "No Cheese" : false}
+            "toppings" : {"Grilled Garlic Chicken" : true, "Bacon": true, "Tomatoes" : true, "No Cheese" : false}
         },
         {
             "type" : "Sweet Heat",
             "price" : 9,
             "sauceOptions" : ["Sweet heat sauce"],
-            "toppings" : {"Grilled Garlic Chicken" : true, "Pineapple" : true, "Red Onion" : true, "Green Peppers" : true, "No Cheese" : false}
+            "toppings" : {"Grilled Garlic Chicken" : true, "Pineapple" : true, "Red Onion" : true, "Green Bell Peppers" : true, "No Cheese" : false}
         }
     ]
 }

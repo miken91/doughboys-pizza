@@ -67,6 +67,7 @@ function createOrder(req, res, next) {
   body.idempotency_key = uuidv4()
   const orders_api = new squareConnect.OrdersApi()
   const payments_api = new squareConnect.PaymentsApi()
+  console.log(body);
   orders_api.createOrder(process.env.SQLOCATIONID, body).then(function (orderData) {
     let payment_body = {}
     if (req.body.order.orderTip) {

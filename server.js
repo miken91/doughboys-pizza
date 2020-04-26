@@ -73,7 +73,7 @@ function createOrder(req, res, next) {
       payment_body = {
         idempotency_key: uuidv4(),
         amount_money: orderData.order.total_money,
-        tip_money: { amount: parseFloat(req.body.order.orderTip * 100), currency: "USD" },
+        tip_money: { amount: parseInt(req.body.order.orderTip * 100), currency: "USD" },
         source_id: req.body.nonce,
         order_id: orderData.order.id
       }

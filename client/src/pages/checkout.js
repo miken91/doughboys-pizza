@@ -61,7 +61,7 @@ function Checkout() {
     return (
         <>
         <div class="notification is-primary" style={{ position: "sticky", top: "0", zIndex: "1", textAlign: "center" }}>
-            <strong>Now taking orders to be picked up only at 17723 Westhampton Woods Drive in St. Louis, MO from 5 to 7</strong>
+            <strong>Now taking orders to be picked up only at 17723 Westhampton Woods Drive in St. Louis, MO from 5 to 7 on Sunday, April 26th.</strong>
         </div>
         <div class="container" style={{ height: displayPaymentForm() && !orderReceipt ? '115vh' : '100vh'}}>
             <div class="box">

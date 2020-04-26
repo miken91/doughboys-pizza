@@ -85,13 +85,13 @@ const PaymentPage = (props) => {
                         <span class="sq-label">Tip Amount</span>
                         <div class="columns is-mobile">
                             <div class="column is-one-third">
-                                <button onClick={()=> handleAddTip(.18)} class="sq-creditcard">18%</button>
+                                <button onClick={()=> handleAddTip(.10)} class="sq-creditcard">18%</button>
                             </div>
                             <div class="column is-one-third">
-                                <button onClick={()=> handleAddTip(.20)} class="sq-creditcard">20%</button>
+                                <button onClick={()=> handleAddTip(.15)} class="sq-creditcard">20%</button>
                             </div>
                             <div class="column is-one-third">
-                                <button onClick={()=> handleAddTip(.22)} class="sq-creditcard">22%</button>
+                                <button onClick={()=> handleAddTip(.20)} class="sq-creditcard">22%</button>
                             </div>
                         </div>
                     </div>

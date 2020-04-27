@@ -28,12 +28,13 @@ function App() {
       <Layout>
         <Switch>
           <Route path="/order-now">
-            {(moment().isBefore(moment('2020-04-26T18:15:00'))) ? <OrderNow/> : 
+            {/* {(moment().isBefore(moment('2020-04-26T18:15:00'))) ? <OrderNow/> : 
             <div class="container" style={{height: '100vh'}}>
               <div class="box">
                 <h1 class="subtitle" style={{textAlign: 'center'}}>Sorry, we aren't currently taking online orders. Please check back soon!</h1>
               </div>
-            </div>}
+            </div>} */}
+            <OrderNow/>
           </Route>
           <Route path="/checkout">
             {order.orderTotal !== 0 ?

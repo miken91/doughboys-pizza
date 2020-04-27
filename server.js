@@ -2,10 +2,12 @@ var express = require('express');
 var path = require('path');
 require('dotenv').config();
 var app = express();
+var server = require('http').Server(app);
 var cors = require('cors');
 app.use(express.json());
 app.use(cors())
 var port = process.env.PORT || 8080;
+
 
 app.use(require('./routes'));
 
@@ -18,6 +20,6 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.listen(port, function () {
+server.listen(port, function () {
   console.log('Application running on port: ' + port);
 });

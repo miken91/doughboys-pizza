@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import ApplicationContext from "../ApplicationContext";
 import {
     Link
@@ -7,6 +7,7 @@ import TimePicker from "rc-time-picker";
 import 'rc-time-picker/assets/index.css';
 import PaymentPage from '../components/square-payment';
 import moment from 'moment';
+import socketIOClient from 'socket.io-client';
 
 function Checkout() {
     const state = useContext(ApplicationContext);
@@ -47,6 +48,14 @@ function Checkout() {
             return state.order.orderTotal
         }
     }
+
+    useEffect(() => {
+        const socket = socketIOClient('http://localhost:8080');
+        socket.emit('get time list')
+        socket.on('available time list', function(data){
+            console.log('got time list');
+        });
+    },[])
 
     const displayPaymentForm = () => {
         return orderPlacer.name

@@ -80,6 +80,7 @@ module.exports = {
         body.idempotency_key = uuidv4()
         const orders_api = new squareConnect.OrdersApi()
         const payments_api = new squareConnect.PaymentsApi()
+
         console.log(JSON.stringify(body, null, 4));
         orders_api.createOrder(process.env.SQLOCATIONID, body).then(function (orderData) {
             let payment_body = {}

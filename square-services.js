@@ -6,6 +6,8 @@ defaultClient.basePath = process.env.SQ_BASE_PATH
 oauth2 = defaultClient.authentications['oauth2'];
 oauth2.accessToken = process.env.SQACCESSTOKEN;
 const catalog_api = new squareConnect.CatalogApi();
+const Event = require('./event.model')
+const moment = require('moment');
 
 async function getCatalogFromSquare() {
     let catalog;
@@ -80,9 +82,8 @@ module.exports = {
         body.idempotency_key = uuidv4()
         const orders_api = new squareConnect.OrdersApi()
         const payments_api = new squareConnect.PaymentsApi()
-
         console.log(JSON.stringify(body, null, 4));
-        orders_api.createOrder(process.env.SQLOCATIONID, body).then(function (orderData) {
+        orders_api.createOrder(process.env.SQLOCATIONID, body).then(function (orderData, body) {
             let payment_body = {}
             if (req.body.order.orderTip) {
                 payment_body = {
@@ -101,6 +102,19 @@ module.exports = {
                 }
             }
             payments_api.createPayment(payment_body).then(function (data) {
+                Event.findOne({date: moment("2020-04-29").format("YYYY-MM-DD")}, async function(err, event){
+                    if(err) {
+                        return res.status(500).send(err)
+                    }
+                    event.availableTimes.forEach(time => {
+                        if(moment(time.time).isSame(moment(req.body.orderPlacer.pickupTime),"minute")) {
+                            time.count ++;
+                        }
+                    });
+                    event.save();
+                }) 
+                
+               
                 res.send(JSON.stringify(data));
             }, function (error) {
                 console.log(error);

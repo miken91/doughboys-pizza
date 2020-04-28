@@ -1,15 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Img from "react-image";
 import {
     Link
 } from "react-router-dom";
+import Banner from "../components/banner";
 
 const HomePage = () => {
     return (
         <>
-            <div class="notification is-primary" style={{ position: "sticky", top: "0", zIndex: "1", textAlign: "center" }}>
-                <strong>Now taking orders to be picked up only at 17723 Westhampton Woods Drive in St. Louis, MO from 5 to 7 on Sunday, April 26th.</strong>
-            </div>
+            <Banner/>
             <div style={{ height: "80vh" }} class="container">
                 <div class="box">
                     <div class="columns">

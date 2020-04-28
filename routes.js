@@ -1,16 +1,22 @@
 var express = require('express');
 var squareServices = require('./square-services');
+var displayServices = require('./display-services')
+var router = express.Router();
 
+router.get('/available-times', function (req, res) {
+    displayServices.getAvailableTimes(req, res)
+})
 
-  
-module.exports = function() {
-    let router = express.Router();
+router.get('/next-event', function(req, res) {
+    displayServices.getNextEvent(req, res)
+})
 
-    router.post('/complete-order', function (req, res) {
-        squareServices.createOrder(req,res);
-    })
+router.get('/batch-update-events', function (req, res){
+    displayServices.batchUpdateEvents(req, res)
+})
 
-    router.get('/available-times', function(req, res) {
-        
-    })
-};
+router.post('/complete-order', function (req, res) {
+    squareServices.createOrder(req, res);
+})
+
+module.exports = router;

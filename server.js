@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(cors())
 var port = process.env.PORT || 8080;
 const mongoose = require('mongoose');
-const mongoURI = process.env.MONGO_URI;
+const mongoURI = process.env.MONGODB_URI;
 
 mongoose.connect(mongoURI);
 mongoose.Promise = global.Promise;

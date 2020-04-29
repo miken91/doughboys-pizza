@@ -43,7 +43,7 @@
             "toppings" : {"Hickory Smoked Ham" : true,"Pineapple" : true, "Jalapeno Peppers" : true, "No Cheese" : false}
         },
         {
-            "type" : "Doughboy's Club",
+            "type" : "Doughboys Club",
             "price" : 8.50,
             "sauceOptions" : ["Ranch based sauce"],
             "toppings" : {"Grilled Garlic Chicken" : true, "Bacon": true, "Tomatoes" : true, "No Cheese" : false}

@@ -45,7 +45,9 @@ async function mapRequestToOrder(body) {
                 modifiers.push({ catalog_object_id: modifier.id })
             }
         });
-        line_items.push({ "catalog_object_id": item_id[0], modifiers: modifiers, "quantity": "1", note: pizza.comments })
+        if(item_id[0]) {
+            line_items.push({ "catalog_object_id": item_id[0], modifiers: modifiers, "quantity": "1", note: pizza.comments })
+        }
     });
     const today = new Date()
     const tomorrow = new Date(today)

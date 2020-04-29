@@ -27,6 +27,7 @@ module.exports = {
 
     batchUpdateEvents: async function (req, res) {
         eventsResponse = await fetch('https://www.googleapis.com/calendar/v3/calendars/doughboyswoodfiredpizza@gmail.com/events?key=' + process.env.GOOGLE_API_KEY + '&timeMin=' + moment("2020-01-01").format() + '&timeMax=' + moment("2020-12-31").format())
+        console.log(JSON.stringify(eventsResponse))
         events = await eventsResponse.json()
         events.items.forEach(element => {
             let hoursAmount = moment.duration(moment(element.end.dateTime).diff(moment(element.start.dateTime))).hours()

@@ -26,7 +26,7 @@ module.exports = {
     },
 
     batchUpdateEvents: async function (req, res) {
-        const googleUrl = 'https://www.googleapis.com/calendar/v3/calendars/doughboyswoodfiredpizza@gmail.com/events?key=' + process.env.GOOGLE_API_KEY + '&timeMin=' + moment("2020-01-01").format() + '&timeMax=' + moment("2020-12-31").format()
+        const googleUrl = 'https://www.googleapis.com/calendar/v3/calendars/doughboyswoodfiredpizza@gmail.com/events?key=' + process.env.GOOGLE_API_KEY + '&timeMin=' + moment("2020-01-01").format();
         eventsResponse = await fetch(googleUrl)
         events = await eventsResponse.json()
         events.items.forEach(element => {
@@ -55,5 +55,33 @@ module.exports = {
             })
         });
         res.send("Events Update")
+    },
+
+    addEvent: async function(req, res) {
+        let eventReq = req.body.event;
+        let hoursAmount = moment.duration(moment(eventReq.end).diff(moment(eventReq.start))).hours()
+            let times = []
+            for (i = 1; i < hoursAmount * 12; i++) {
+                times.push({
+                    time: moment(eventReq.start).add(i * 5, 'm').format(), count: 0
+                })
+            }
+            let event = new Event(
+                {
+                    description: eventReq.summary,
+                    startTime: moment(eventReq.start),
+                    endTime: moment(eventReq.end),
+                    date: moment(eventReq.start).format("YYYY-MM-DD"),
+                    availableTimes: times
+                }
+            )
+            event.save(function (err) {
+                if (err) {
+                    console.log(err)
+                } else {
+                    res.send("Event Added")
+                    console.log('event added')
+                }
+            })
     }
 }

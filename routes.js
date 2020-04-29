@@ -15,6 +15,10 @@ router.get('/batch-update-events', function (req, res){
     displayServices.batchUpdateEvents(req, res)
 })
 
+router.post('/add-event', function(req, res){
+    displayServices.addEvent(req, res)
+})
+
 router.post('/complete-order', function (req, res) {
     squareServices.createOrder(req, res);
 })

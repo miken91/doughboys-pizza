@@ -15,6 +15,7 @@ function MobileOrderNow() {
         state.order.pizzasOrdered.splice(index, 1);
         state.setOrder({ pizzasOrdered: [...state.order.pizzasOrdered], orderTotal: orderTotal })
     }
+    const beverages = ['Coke', 'Red Bull']
     return (
         <div className="mobile">
             <div className="mobile-menu">
@@ -31,10 +32,27 @@ function MobileOrderNow() {
                         <h1 class="title">Build Your Own</h1>
                         {pizzasForMenu.Pizzas.map((pizza, i) =>
                             <>
-                            {i === 1 ? <h1 class="title">Speciality Pizzas</h1> : null}
-                            <CustomPizza order={{ order: state.order, setOrder: state.setOrder }} pizza={pizza} />
+                                {i === 1 ? <h1 class="title">Speciality Pizzas</h1> : null}
+                                <CustomPizza order={{ order: state.order, setOrder: state.setOrder }} pizza={pizza} />
                             </>
                         )}
+                        {/* <h1 class="title">Beverages</h1>
+                        <div class="field">
+                            <div class="control">
+                                <div class="select is-primary">
+                                    <select>
+                                        {beverages.map((beverage, i) =>
+                                            <option>{beverage}</option>
+                                        )}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-primary is-small">Add To Order</button>
+                            </div>
+                        </div> */}
                     </> :
                     <>
                         <div className="order-summary">

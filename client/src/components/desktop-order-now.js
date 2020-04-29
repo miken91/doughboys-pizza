@@ -15,6 +15,7 @@ function DesktopOrderNow() {
         state.order.pizzasOrdered.splice(index, 1);
         state.setOrder({ pizzasOrdered: [...state.order.pizzasOrdered], orderTotal: orderTotal })
     }
+    const beverages = ['Coke', 'Red Bull', 'Sprite', 'Water']
     return (
         <div className="desktop">
             <div class="box columns">
@@ -23,11 +24,28 @@ function DesktopOrderNow() {
                         <div class="column is-8 is-mobile">
                             <h1 class="title">Build Your Own</h1>
                             {pizzasForMenu.Pizzas.map((pizza, i) =>
-                            <>
-                                {i === 1 ? <h1 class="title" style={{marginTop: "1.5em"}}>Speciality Pizzas</h1> : null}
-                                <CustomPizza order={{ order: state.order, setOrder: state.setOrder }} pizza={pizza} />
-                            </>
+                                <>
+                                    {i === 1 ? <h1 class="title" style={{ marginTop: "1.5em" }}>Speciality Pizzas</h1> : null}
+                                    <CustomPizza order={{ order: state.order, setOrder: state.setOrder }} pizza={pizza} />
+                                </>
                             )}
+                            {/* <h1 class="title">Beverages</h1>
+                            <div class="field">
+                                <div class="control">
+                                    <div class="select is-primary">
+                                        <select>
+                                            {beverages.map((beverage, i) =>
+                                                <option>{beverage}</option>
+                                            )}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="control">
+                                    <button class="button is-primary is-small">Add To Order</button>
+                                </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>
@@ -66,6 +84,7 @@ function DesktopOrderNow() {
                                     </>
                                 )}
                             </> : null}
+
                         </div>
                         <div>
                             <div class="level is-mobile">
@@ -84,7 +103,7 @@ function DesktopOrderNow() {
                                 <div class="level-right">
                                     {parseInt(state.order.orderTotal) !== 0 ? <Link to="/checkout">
                                         <button class="button is-primary">Place Order</button>
-                                    </Link> : null }
+                                    </Link> : null}
                                 </div>
                             </div>
                         </div>

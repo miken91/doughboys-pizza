@@ -5,28 +5,28 @@ var Event = require('./event.model');
 
 module.exports = {
     getAvailableTimes: async function (req, res) {
-       Event.findOne({date: moment("2020-04-29").format("YYYY-MM-DD"), endTime: {$gt: new Date()}}, function(err, event){
+       Event.findOne({endTime: {$gte: moment().utcOffset(0).toDate(), $lte: moment().add(1,'d').utcOffset(0).toDate()}}, function(err, event){
            if(err) {
                return res.status(500).send(err)
            }
            let times = event.availableTimes;
            res.send(times.filter(function(time){
-                return time.count < 2 && moment(time.time).isAfter(moment().add(15,'m'))
+                return time.count < 3 && moment(time.time).isAfter(moment().add(15,'m'))
            }))
        }) 
     },
 
     getNextEvent: async function (req, res) {
-        Event.findOne({date: moment("2020-04-29").format("YYYY-MM-DD"), endTime: {$gt: new Date()}}, function(err, event){
+        Event.findOne({endTime: {$gte: moment().utcOffset(0).toDate(), $lte: moment().add(1,'d').utcOffset(0).toDate()}}, function(err, event){
             if(err) {
                 return res.status(500).send(err)
             }
-            res.send(event);
+            res.send(event ? event : {} );
         })
     },
 
     batchUpdateEvents: async function (req, res) {
-        eventsResponse = await fetch('https://www.googleapis.com/calendar/v3/calendars/doughboyswoodfiredpizza@gmail.com/events?key=' + process.env.GOOGLE_API_KEY + '&timeMin=' + moment().format() + '&timeMax=' + moment().add(1, 'y').format())
+        eventsResponse = await fetch('https://www.googleapis.com/calendar/v3/calendars/doughboyswoodfiredpizza@gmail.com/events?key=' + process.env.GOOGLE_API_KEY + '&timeMin=' + moment("2020-01-01").format() + '&timeMax=' + moment("2020-12-31").format())
         events = await eventsResponse.json()
         events.items.forEach(element => {
             let hoursAmount = moment.duration(moment(element.end.dateTime).diff(moment(element.start.dateTime))).hours()

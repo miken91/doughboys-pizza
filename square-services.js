@@ -33,6 +33,7 @@ async function getCatalogFromSquare() {
 }
 
 async function mapRequestToOrder(body) {
+    console.log(JSON.stringify(body))
     catalog = await getCatalogFromSquare();
     let line_items = [];
     body.order.pizzasOrdered.forEach(pizza => {
@@ -45,9 +46,7 @@ async function mapRequestToOrder(body) {
                 modifiers.push({ catalog_object_id: modifier.id })
             }
         });
-        if(item_id[0]) {
-            line_items.push({ "catalog_object_id": item_id[0], modifiers: modifiers, "quantity": "1", note: pizza.comments })
-        }
+        line_items.push({ "catalog_object_id": item_id[0], modifiers: modifiers, "quantity": "1", note: pizza.comments })
     });
     const today = new Date()
     const tomorrow = new Date(today)

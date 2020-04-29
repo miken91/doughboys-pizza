@@ -103,7 +103,7 @@ module.exports = {
                 }
             }
             payments_api.createPayment(payment_body).then(function (data) {
-                Event.findOne({date: moment("2020-04-29").format("YYYY-MM-DD")}, async function(err, event){
+                Event.findOne({endTime: {$gte: moment().utcOffset(0).toDate(), $lte: moment().add(1,'d').utcOffset(0).toDate()}}, async function(err, event){
                     if(err) {
                         return res.status(500).send(err)
                     }

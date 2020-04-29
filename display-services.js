@@ -63,7 +63,7 @@ module.exports = {
             let times = []
             for (i = 1; i < hoursAmount * 12; i++) {
                 times.push({
-                    time: moment(eventReq.start).add(i * 5, 'm').format(), count: 0
+                    time: moment(eventReq.start).utcOffset(-5).add(i * 5, 'm').format(), count: 0
                 })
             }
             let event = new Event(

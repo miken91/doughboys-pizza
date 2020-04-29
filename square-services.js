@@ -37,16 +37,16 @@ async function mapRequestToOrder(body) {
     catalog = await getCatalogFromSquare();
     let line_items = [];
     body.order.pizzasOrdered.forEach(pizza => {
-        const item_id = catalog.items.filter(item =>
-            item.item_data.name.includes(pizza.type)
-        ).map(item => item.item_data.variations[0].id);
+        const pizza_item = catalog.items.filter(item =>
+            item.item_data.name.includes(pizza.type))
+        item_id = pizza_item[0].item_data.variations[0].id;   
         const modifiers = [];
         catalog.modifiers.forEach(modifier => {
             if (pizza.toppings.includes(modifier.modifier_data.name)) {
                 modifiers.push({ catalog_object_id: modifier.id })
             }
         });
-        line_items.push({ "catalog_object_id": item_id[0], modifiers: modifiers, "quantity": "1", note: pizza.comments })
+        line_items.push({ "catalog_object_id": item_id, modifiers: modifiers, "quantity": "1", note: pizza.comments })
     });
     const today = new Date()
     const tomorrow = new Date(today)
@@ -115,8 +115,7 @@ module.exports = {
                     event.save();
                 }) 
                 
-               
-                res.send(JSON.stringify(data));
+               res.send(JSON.stringify(data));
             }, function (error) {
                 console.log(error);
                 res.status(400).send(error);

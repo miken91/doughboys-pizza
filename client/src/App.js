@@ -13,38 +13,38 @@ import Contact from './pages/contact';
 import moment from 'moment';
 
 function App() {
-  const [order, setOrder] = useState({pizzasOrdered: [], orderTotal: 0.00, orderTip: 0.00})
-  // const [nextEvents, setNextEvents] = useState({events:[]})
-  // useEffect(()=>{
-  //   fetch('https://www.googleapis.com/calendar/v3/calendars/doughboyswoodfiredpizza@gmail.com/events?key=' + process.env.REACT_APP_GOOGLE_API_KEY + '&timeMin=' + moment().hour(0).format() + '&timeMax=' + moment().hour(23).format())
-  // .then((response)=>{
-  //     return response.json();
-  // }).then((data)=>{
-  //     setNextEvents({events: data.items});
-  // })
-  // },[])
+  const [order, setOrder] = useState({pizzasOrdered: [], beverages: [], orderTotal: 0.00, orderTip: 0.00})
+  const [event, setEvent] = useState();
+    useEffect(() => {
+        async function getEvent() {
+            let response = await fetch('/next-event')
+            if(response) {
+                setEvent(await response.json());
+            }
+        }
+        getEvent();
+    }, [])
   return (
     <ApplicationContext.Provider value={{order, setOrder}}>
       <Layout>
         <Switch>
           <Route path="/order-now">
-            {/* {(moment().isBefore(moment('2020-04-26T18:15:00'))) ? <OrderNow/> : 
+            {event && Object.entries(event).length !== 0 ? <OrderNow/> : 
             <div class="container" style={{height: '100vh'}}>
               <div class="box">
                 <h1 class="subtitle" style={{textAlign: 'center'}}>Sorry, we aren't currently taking online orders. Please check back soon!</h1>
               </div>
-            </div>} */}
-            <OrderNow/>
+            </div>}
           </Route>
           <Route path="/checkout">
             {order.orderTotal !== 0 ?
-            <Checkout/> : <Redirect to="/order-now"/>}
+            <Checkout event={event}/> : <Redirect to="/order-now"/>}
           </Route>
           <Route path="/contact">
             <Contact/>
           </Route>
           <Route path="/">
-            <HomePage/>
+            <HomePage event={event}/>
           </Route>
         </Switch>
       </Layout>

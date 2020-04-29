@@ -5,10 +5,10 @@ import {
 } from "react-router-dom";
 import Banner from "../components/banner";
 
-const HomePage = () => {
+const HomePage = (props) => {
     return (
         <>
-            <Banner/>
+            <Banner event={props.event}/>
             <div style={{ height: "80vh" }} class="container">
                 <div class="box">
                     <div class="columns">

@@ -8,11 +8,10 @@ import PaymentPage from '../components/square-payment';
 import moment from 'moment';
 import Banner from '../components/banner';
 
-function Checkout() {
+function Checkout(props) {
     const state = useContext(ApplicationContext);
     const [orderReceipt, setOrderReceipt] = useState();
-    const defaultPickupTime = moment().hour(17).minute(0)
-    const [orderPlacer, setOrderPlacer] = useState({ name: "", phone: "", email: "", pickupTime: defaultPickupTime })
+    const [orderPlacer, setOrderPlacer] = useState({ name: "", phone: "", email: "", pickupTime: "" })
     const [emailValidity, setEmailValidity] = useState(false);
     const [phoneValidity, setPhoneValidity] = useState(false);
     const [events, setEvents] = useState([]);
@@ -66,7 +65,7 @@ function Checkout() {
 
     return (
         <>
-            <Banner/>
+            <Banner event={props.event}/>
             <div class="container" style={{ height: displayPaymentForm() && !orderReceipt ? '115vh' : '100vh' }}>
                 <div class="box">
                     <div class="column is-4 is-offset-4">
@@ -119,7 +118,7 @@ function Checkout() {
                                 ? <PaymentPage orderReceipt={{ orderReceipt, setOrderReceipt }} orderPlacer={orderPlacer} />
                                 : <div>Please provide contact information before processing payment.</div>}</>
                             : <><h1 className="contact-information-title">Thank you for your order!</h1>
-                                <p>Your order can be picked up at {}</p>
+                                <p>Your order can be picked up at {moment(orderPlacer.pickupTime).format("hh:mm a")}</p>
                                 <p>Your card was charged ${evaluateAndReturnTotal()}</p></>}
                     </div>
                 </div>

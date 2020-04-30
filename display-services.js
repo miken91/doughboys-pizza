@@ -5,23 +5,23 @@ var Event = require('./event.model');
 
 module.exports = {
     getAvailableTimes: async function (req, res) {
-       Event.findOne({endTime: {$gte: moment().utcOffset(0).toDate()}}, function(err, event){
-           if(err) {
-               return res.status(500).send(err)
-           }
-           let times = event.availableTimes;
-           res.send(times.filter(function(time){
-                return time.count < 3 && moment(time.time).isAfter(moment().add(15,'m'))
-           }))
-       }) 
+        Event.findOne({ endTime: { $gte: moment().utcOffset(0).toDate() } }, function (err, event) {
+            if (err) {
+                return res.status(500).send(err)
+            }
+            let times = event.availableTimes;
+            res.send(times.filter(function (time) {
+                return time.count < 3 && moment(time.time).isAfter(moment().add(15, 'm'))
+            }))
+        })
     },
 
     getNextEvent: async function (req, res) {
-        Event.findOne({endTime: {$gte: moment().utcOffset(0).toDate()}}, function(err, event){
-            if(err) {
+        Event.findOne({ endTime: { $gte: moment().utcOffset(0).toDate() } }, function (err, event) {
+            if (err) {
                 return res.status(500).send(err)
             }
-            res.send(event ? event : {} );
+            res.send(event ? event : {});
         })
     },
 
@@ -57,31 +57,41 @@ module.exports = {
         res.send("Events Update")
     },
 
-    addEvent: async function(req, res) {
+    addEvent: async function (req, res) {
         let eventReq = req.body.event;
         let hoursAmount = moment.duration(moment(eventReq.end).diff(moment(eventReq.start))).hours()
-            let times = []
-            for (i = 1; i < hoursAmount * 12; i++) {
-                times.push({
-                    time: moment(eventReq.start).utcOffset(-5).add(i * 5, 'm').format(), count: 0
-                })
-            }
-            let event = new Event(
-                {
-                    description: eventReq.summary,
-                    startTime: moment(eventReq.start),
-                    endTime: moment(eventReq.end),
-                    date: moment(eventReq.start).format("YYYY-MM-DD"),
-                    availableTimes: times
-                }
-            )
-            event.save(function (err) {
-                if (err) {
-                    console.log(err)
-                } else {
-                    res.send("Event Added")
-                    console.log('event added')
-                }
+        let times = []
+        for (i = 1; i < hoursAmount * 12; i++) {
+            times.push({
+                time: moment(eventReq.start).utcOffset(-5).add(i * 5, 'm').format(), count: 0
             })
+        }
+        let event = new Event(
+            {
+                description: eventReq.summary,
+                startTime: moment(eventReq.start),
+                endTime: moment(eventReq.end),
+                date: moment(eventReq.start).format("YYYY-MM-DD"),
+                availableTimes: times
+            }
+        )
+        event.save(function (err) {
+            if (err) {
+                console.log(err)
+            } else {
+                res.send("Event Added")
+                console.log('event added')
+            }
+        })
+    },
+
+    getEvents: async function(req, res) {
+        // let events = await Event.all({}, {sort: '-date'})
+        // let eventsResponse = JSON.stringify(events);
+        // res.send(eventsResponse)
+    },
+
+    editEvent: async function(req, res) {
+        
     }
 }

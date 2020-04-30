@@ -19,6 +19,10 @@ router.post('/add-event', function(req, res){
     displayServices.addEvent(req, res)
 })
 
+router.get('/get-events', function(req, res){
+    displayServices.getEvents(req, res)
+})
+
 router.post('/complete-order', function (req, res) {
     squareServices.createOrder(req, res);
 })

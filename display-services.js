@@ -5,7 +5,7 @@ var Event = require('./event.model');
 
 module.exports = {
     getAvailableTimes: async function (req, res) {
-       Event.findOne({endTime: {$gte: moment().utcOffset(0).toDate()}, function(err, event){
+       Event.findOne({endTime: {$gte: moment().utcOffset(0).toDate()}}, function(err, event){
            if(err) {
                return res.status(500).send(err)
            }

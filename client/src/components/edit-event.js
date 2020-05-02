@@ -12,7 +12,7 @@ function EditEvent(props) {
     const [index, setIndex] = useState(0);
     const [loading, setLoading] = useState(false);
 
-    const handleClick = async () => {
+    const handleEditClick = async () => {
         setLoading(true)
         var response = await fetch('/edit-event/' + eventId, {
             method: 'PUT',
@@ -27,7 +27,7 @@ function EditEvent(props) {
         if (response.message === "Event edited succesfully.") {
             store.addNotification({
                 title: "Event Modification",
-                message: "Event Edited Succesfully",
+                message: "Event Edited Succesfully.",
                 type: "success",
                 insert: "top",
                 container: "top-center",
@@ -38,7 +38,7 @@ function EditEvent(props) {
         } else {
             store.addNotification({
                 title: "Error",
-                message: "Error While Editing Event",
+                message: "Error While Editing Event.",
                 type: "danger",
                 insert: "top",
                 container: "top-center",
@@ -47,6 +47,40 @@ function EditEvent(props) {
                 }
             })
         }
+    }
+
+    const handleDeleteClick = async () => {
+        setLoading(true)
+        var response = await fetch('/delete-event/' + eventId, {
+            method: 'DELETE',
+        })
+        getEvents()
+        setLoading(false)
+        response = await response.json();
+        if (response.message === "Event deleted succesfully.") {
+            store.addNotification({
+                title: "Event Deletion",
+                message: "Event Deleted Succesfully.",
+                type: "success",
+                insert: "top",
+                container: "top-center",
+                dismiss: {
+                    duration: 1500,
+                }
+            })
+        } else {
+            store.addNotification({
+                title: "Error",
+                message: "Error While Deleting Event.",
+                type: "danger",
+                insert: "top",
+                container: "top-center",
+                dismiss: {
+                    duration: 1500,
+                }
+            })
+        }
+        setIndex(0)
     }
 
     async function getEvents() {
@@ -80,62 +114,64 @@ function EditEvent(props) {
     return (
         <>
             <h1 class="subtitle is-5 is-spaced" style={{ marginTop: "1.5em" }}>Edit Existing Events</h1>
-            <div class="field">
-                <label class="label">Select an Event to Edit</label>
-                {events ?
-                    <select onChange={(event) => handleEventToEditChange(event)}>
-                        {events.map((event, index) =>
-                            <option value={index}>{event.description}--{event.date}</option>
-                        )}
-                    </select> : <div>Retrieving events</div>}
-            </div>
+            {events.length !== 0 ?
+                <>
+                    <div class="field">
+                        <label class="label">Select an Event to Edit</label>
 
-            <div class="field">
-                <label class="label">Description</label>
-                <div class="control">
-                    <input name='descEdit' value={description || ""} onChange={(event) => setDescription(event.target.value)} class="input" type="text" placeholder="Event Description" />
-                </div>
-            </div>
-            <div class="field">
-                <label class="label">Start Date and Time</label>
-                <div class="control">
-                    <DateTimePicker
-                        name='startEdit'
-                        onChange={(value) => setStartDateTime(value)}
-                        value={moment(startDateTime).toDate()}
-                        disableClock={true} />
-                </div>
-            </div>
-            <div class="field">
-                <label class="label">End Date and Time</label>
-                <div class="control">
-                    <DateTimePicker
-                        name='endEdit'
-                        onChange={(value) => setEndDateTime(value)}
-                        value={moment(endDateTime).toDate()}
-                        disableClock={true} />
-                </div>
-            </div>
-            <div class="level">
-                <div class="level-left">
-                    <div class="level-item">
-                        <div class="field">
-                            <div class="control">
-                                <button disabled={loading} class="button is-primary" onClick={handleClick} disabled={description === ""}>Edit Event</button>
-                                {loading ? <progress class="progress is-small is-primary" /> : null}
+                        <select value={index} onChange={(event) => handleEventToEditChange(event)}>
+                            {events.map((event, index) =>
+                                <option value={index}>{event.description}--{event.date}</option>
+                            )}
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Description/Address</label>
+                        <div class="control">
+                            <input name='descEdit' value={description || ""} onChange={(event) => setDescription(event.target.value)} class="input" type="text" placeholder="Event Description" />
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Start Date and Time</label>
+                        <div class="control">
+                            <DateTimePicker
+                                name='startEdit'
+                                onChange={(value) => setStartDateTime(value)}
+                                value={moment(startDateTime).toDate()}
+                                disableClock={true} />
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">End Date and Time</label>
+                        <div class="control">
+                            <DateTimePicker
+                                name='endEdit'
+                                onChange={(value) => setEndDateTime(value)}
+                                value={moment(endDateTime).toDate()}
+                                disableClock={true} />
+                        </div>
+                    </div>
+                    <div class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <div class="field">
+                                    <div class="control">
+                                        <button disabled={loading} class="button is-primary" onClick={handleEditClick}>Edit Event</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="level-item">
+                                <div class="field">
+                                    <div class="control">
+                                        <button disabled={loading} class="button is-danger" onClick={handleDeleteClick}>Delete Event</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="level-item">
-                        <div class="field">
-                            <div class="control">
-                                <button disabled={loading} class="button is-primary" onClick={handleClick} disabled={description === ""}>Edit Event</button>
-                                {loading ? <progress class="progress is-small is-primary" /> : null}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                    {loading ? <progress class="progress is-small is-primary" /> : null}
+                </> : <div>No available events to edit.</div>}
         </>
     )
 }

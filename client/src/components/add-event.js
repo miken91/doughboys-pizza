@@ -1,17 +1,47 @@
 import React, {useState} from 'react'
 import DateTimePicker from 'react-datetime-picker';
-import moment from 'moment'
+import { store } from 'react-notifications-component';
 
 function AddEvent(props) {
     const [startDateTime, setStartDateTime] = useState(new Date());
     const [endDateTime, setEndDateTime] = useState(new Date());
     const [description, setDescription] = useState("");
+    const [loading, setLoading] = useState(false);
     const handleClick = async () => {
+        setLoading(true)
         var response = await fetch('/add-event', {method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({event: { summary: description, start: startDateTime, end: endDateTime}})})
+        response = await response.json()
+        setLoading(false)
+        if (response.message === "Event added succesfully.") {
+            store.addNotification({
+                title: "Event Added",
+                message: "Event Added Succesfully",
+                type: "success",
+                insert: "top",
+                container: "top-center",
+                dismiss: {
+                    duration: 1500,
+                }
+            })
+            setStartDateTime(new Date());
+            setEndDateTime(new Date());
+            setDescription("");
+        } else {
+            store.addNotification({
+                title: "Error",
+                message: "Error While Adding Event.",
+                type: "danger",
+                insert: "top",
+                container: "top-center",
+                dismiss: {
+                    duration: 1500,
+                }
+            })
+        }
         props.updateList.setUpdateList(true)
     }
     return (
@@ -48,9 +78,10 @@ function AddEvent(props) {
             </div>
             <div class="field">
                 <div class="control">
-                    <button class="button is-primary" onClick={handleClick} disabled={description === ""}>Add Event</button>
+                    <button class="button is-primary" onClick={handleClick} disabled={description === "" || loading}>Add Event</button>
                 </div>
             </div>
+            {loading ? <progress class="progress is-small is-primary" /> : null}
         </>
     )
 }

@@ -5,7 +5,7 @@ var Event = require('./event.model');
 
 module.exports = {
     getAvailableTimes: async function (req, res) {
-        Event.findOne({ endTime: { $gte: moment().utcOffset(0).toDate(), $lte: moment().add(1,'d').hour(1).utcOffset(0).toDate() }}, function (err, event) {
+        Event.findOne({ endTime: { $gte: moment().utcOffset(0).toDate(), $lte: moment().add(1, 'd').hour(1).utcOffset(0).toDate() } }, function (err, event) {
             if (err) {
                 return res.status(500).send(err)
             }
@@ -17,7 +17,7 @@ module.exports = {
     },
 
     getNextEvent: async function (req, res) {
-        Event.findOne({ endTime: { $gte: moment().utcOffset(0).toDate(), $lte: moment().add(1,'d').hour(1).utcOffset(0).toDate() }}, function (err, event) {
+        Event.findOne({ endTime: { $gte: moment().utcOffset(0).toDate(), $lte: moment().add(1, 'd').hour(1).utcOffset(0).toDate() } }).sort({ _id: -1 }).exec(function (err, event) {
             if (err) {
                 return res.status(500).send(err)
             }
@@ -30,9 +30,9 @@ module.exports = {
         eventsResponse = await fetch(googleUrl)
         events = await eventsResponse.json()
         events.items.forEach(element => {
-            let hoursAmount = moment.duration(moment(element.end.dateTime).diff(moment(element.start.dateTime))).hours()
+            let minutes = moment.duration(moment(eventReq.end).diff(moment(eventReq.start))).asMinutes();
             let times = []
-            for (i = 1; i < hoursAmount * 12; i++) {
+            for (i = 1; i <= Math.floor(minutes / 5); i++) {
                 times.push({
                     time: moment(element.start.dateTime).add(i * 5, 'm').format(), count: 0
                 })
@@ -59,9 +59,9 @@ module.exports = {
 
     addEvent: async function (req, res) {
         let eventReq = req.body.event;
-        let hoursAmount = moment.duration(moment(eventReq.end).diff(moment(eventReq.start))).hours()
+        let minutes = moment.duration(moment(eventReq.end).diff(moment(eventReq.start))).asMinutes();
         let times = []
-        for (i = 1; i < hoursAmount * 12; i++) {
+        for (i = 1; i <= Math.floor(minutes / 5); i++) {
             times.push({
                 time: moment(eventReq.start).utcOffset(-5).add(i * 5, 'm').format(), count: 0
             })
@@ -77,34 +77,43 @@ module.exports = {
         )
         event.save(function (err) {
             if (err) {
-                console.log(err)
+                res.send("Error while adding event.")
             } else {
-                res.send("Event Added")
-                console.log('event added')
+                res.send({message: "Event added succesfully."})
             }
         })
     },
 
-    getEvents: async function(req, res) {
-        let events = await Event.find().sort({date: -1})
+    getEvents: async function (req, res) {
+        let events = await Event.find().sort({ date: -1 })
         res.send(events)
     },
 
-    editEvent: async function(req, res) {
+    editEvent: async function (req, res) {
         let eventReq = req.body.event;
-        let hoursAmount = moment.duration(moment(eventReq.end).diff(moment(eventReq.start))).hours()
+        let minutes = moment.duration(moment(eventReq.end).diff(moment(eventReq.start))).asMinutes();
         let times = []
-        for (i = 1; i < hoursAmount * 12; i++) {
+        for (i = 1; i <= Math.floor(minutes / 5); i++) {
             times.push({
                 time: moment(eventReq.start).utcOffset(-5).add(i * 5, 'm').format(), count: 0
             })
         }
 
-        Event.findByIdAndUpdate(req.params.id, {description: eventReq.summary, startTime: moment(eventReq.start), endTime: moment(eventReq.end), date: moment(eventReq.start).format("YYYY-MM-DD"), availableTimes: times}).then((ret, err)=> {
-            if(err) {
-                res.error("Bad db request")
+        Event.findByIdAndUpdate(req.params.id, { description: eventReq.summary, startTime: moment(eventReq.start), endTime: moment(eventReq.end), date: moment(eventReq.start).format("YYYY-MM-DD"), availableTimes: times }).then((ret, err) => {
+            if (err) {
+                res.error("Error while editing event.")
             } else {
-                res.send({message: "Event edited succesfully."})
+                res.send({ message: "Event edited succesfully." })
+            }
+        })
+    },
+
+    deleteEvent: async function(req, res) {
+        Event.findByIdAndDelete(req.params.id).then((ret, err) => {
+            if (err) {
+                res.error("Error while deleting event.")
+            } else {
+                res.send({ message: "Event deleted succesfully." })
             }
         })
     }

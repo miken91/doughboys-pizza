@@ -23,6 +23,10 @@ router.get('/get-events', function(req, res){
     displayServices.getEvents(req, res)
 })
 
+router.put('/edit-event/:id', function(req, res){
+    displayServices.editEvent(req, res)
+})
+
 router.post('/complete-order', function (req, res) {
     squareServices.createOrder(req, res);
 })

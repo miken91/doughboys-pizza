@@ -5,7 +5,7 @@ var Event = require('./event.model');
 
 module.exports = {
     getAvailableTimes: async function (req, res) {
-        Event.findOne({ endTime: { $gte: moment().utcOffset(0).toDate() } }, function (err, event) {
+        Event.findOne({ endTime: { $gte: moment().utcOffset(0).toDate(), $lte: moment().add(1,'d').hour(1).utcOffset(0).toDate() }}, function (err, event) {
             if (err) {
                 return res.status(500).send(err)
             }
@@ -17,7 +17,7 @@ module.exports = {
     },
 
     getNextEvent: async function (req, res) {
-        Event.findOne({ endTime: { $gte: moment().utcOffset(0).toDate() } }, function (err, event) {
+        Event.findOne({ endTime: { $gte: moment().utcOffset(0).toDate(), $lte: moment().add(1,'d').hour(1).utcOffset(0).toDate() }}, function (err, event) {
             if (err) {
                 return res.status(500).send(err)
             }
@@ -86,12 +86,26 @@ module.exports = {
     },
 
     getEvents: async function(req, res) {
-        // let events = await Event.all({}, {sort: '-date'})
-        // let eventsResponse = JSON.stringify(events);
-        // res.send(eventsResponse)
+        let events = await Event.find().sort({date: -1})
+        res.send(events)
     },
 
     editEvent: async function(req, res) {
-        
+        let eventReq = req.body.event;
+        let hoursAmount = moment.duration(moment(eventReq.end).diff(moment(eventReq.start))).hours()
+        let times = []
+        for (i = 1; i < hoursAmount * 12; i++) {
+            times.push({
+                time: moment(eventReq.start).utcOffset(-5).add(i * 5, 'm').format(), count: 0
+            })
+        }
+
+        Event.findByIdAndUpdate(req.params.id, {description: eventReq.summary, startTime: moment(eventReq.start), endTime: moment(eventReq.end), date: moment(eventReq.start).format("YYYY-MM-DD"), availableTimes: times}).then((ret, err)=> {
+            if(err) {
+                res.error("Bad db request")
+            } else {
+                res.send({message: "Event edited succesfully."})
+            }
+        })
     }
 }

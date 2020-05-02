@@ -46,7 +46,7 @@ async function mapRequestToOrder(body) {
                 modifiers.push({ catalog_object_id: modifier.id })
             }
         });
-        line_items.push({ "catalog_object_id": item_id, modifiers: modifiers, "quantity": "1", note: pizza.comments })
+        line_items.push({ "catalog_object_id": item_id[0], modifiers: modifiers, "quantity": "1", note: pizza.comments })
     });
     const today = new Date()
     const tomorrow = new Date(today)
@@ -103,7 +103,7 @@ module.exports = {
                 }
             }
             payments_api.createPayment(payment_body).then(function (data) {
-                Event.findOne({endTime: {$gte: moment().utcOffset(0).toDate()}}, async function(err, event){
+                Event.findOne({date: moment("2020-04-29").format("YYYY-MM-DD")}, async function(err, event){
                     if(err) {
                         return res.status(500).send(err)
                     }
@@ -115,7 +115,8 @@ module.exports = {
                     event.save();
                 }) 
                 
-               res.send(JSON.stringify(data));
+               
+                res.send(JSON.stringify(data));
             }, function (error) {
                 console.log(error);
                 res.status(400).send(error);

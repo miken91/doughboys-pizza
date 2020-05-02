@@ -152,7 +152,7 @@ function EditEvent(props) {
                                 disableClock={true} />
                         </div>
                     </div>
-                    <div class="level">
+                    <div class="level is-mobile">
                         <div class="level-left">
                             <div class="level-item">
                                 <div class="field">

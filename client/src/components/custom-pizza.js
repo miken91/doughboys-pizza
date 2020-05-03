@@ -29,7 +29,7 @@ function CustomPizza(props) {
     }
 
     const handleClick = () => {
-        let orders = props.order.order.pizzasOrdered;
+        let orders = props.order.order.itemsOrdered;
         let pizzaTotal;
         if (props.pizza.type === "Cheese") {
             pizzaTotal = ((Object.keys(checkedItems).filter(k => checkedItems[k] && k !== "No Cheese").length * .50) + 7).toFixed(2);
@@ -38,7 +38,7 @@ function CustomPizza(props) {
         }
         orders.push({ type: props.pizza.type, sauce: selectedRadioButton, toppings: mapToppingsToSquareModifiers(), comments: additionalComments, price: pizzaTotal })
         let orderTotal = (parseFloat(props.order.order.orderTotal) + parseFloat(pizzaTotal)).toFixed(2);
-        props.order.setOrder({ pizzasOrdered: [...orders], orderTotal: orderTotal})
+        props.order.setOrder({ itemsOrdered: [...orders], orderTotal: orderTotal})
         if (isMobile) {
             store.addNotification({
                 title: "Item Added",

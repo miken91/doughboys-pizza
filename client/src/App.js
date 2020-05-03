@@ -14,7 +14,7 @@ import moment from 'moment';
 import Admin from './pages/admin';
 
 function App() {
-  const [order, setOrder] = useState({ pizzasOrdered: [], beverages: [], orderTotal: 0.00, orderTip: 0.00 })
+  const [order, setOrder] = useState({ itemsOrdered: [], orderTotal: 0.00, orderTip: 0.00})
   const [event, setEvent] = useState();
   useEffect(() => {
     async function getEvent() {

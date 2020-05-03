@@ -8,7 +8,7 @@ import EditEvent from '../components/edit-event';
 function Admin() {
     const [updateList, setUpdateList] = useState(false)
     return (
-        <div style={{ "height": "100%" }} class="container">
+        <div style={{ "height": "110vh" }} class="container">
             <div class="box">
                 <div class="columns">
                     <div class="column is-one-third">

@@ -36,17 +36,17 @@ async function mapRequestToOrder(body) {
     console.log(JSON.stringify(body))
     catalog = await getCatalogFromSquare();
     let line_items = [];
-    body.order.pizzasOrdered.forEach(pizza => {
-        const pizza_item = catalog.items.filter(item =>
-            item.item_data.name.includes(pizza.type))
-        item_id = pizza_item[0].item_data.variations[0].id;   
+    body.order.itemsOrdered.forEach(itemFromReq => {
+        const added_item = catalog.items.filter(item =>
+            item.item_data.name.includes(itemFromReq.type))
+        item_id = added_item[0].item_data.variations[0].id;   
         const modifiers = [];
         catalog.modifiers.forEach(modifier => {
-            if (pizza.toppings.includes(modifier.modifier_data.name)) {
+            if (itemFromReq.toppings && itemFromReq.toppings.includes(modifier.modifier_data.name)) {
                 modifiers.push({ catalog_object_id: modifier.id })
             }
         });
-        line_items.push({ "catalog_object_id": item_id[0], modifiers: modifiers, "quantity": "1", note: pizza.comments })
+        line_items.push({ "catalog_object_id": item_id, modifiers: modifiers, "quantity": "1", note: itemFromReq.comments })
     });
     const today = new Date()
     const tomorrow = new Date(today)
@@ -71,9 +71,20 @@ async function mapRequestToOrder(body) {
             name: catalog.tax[0].name,
             catalog_object_id: catalog.tax[0].id,
             scope: "ORDER"
+        },
+    ]
+    let service_charges = [
+        {
+            name: "Online Ordering Fee",
+            uid: uuidv4(),
+            amount_money: {
+                amount: parseInt((parseFloat(body.order.orderTotal) * .04) * 100),
+                currency: "USD"
+            },
+            calculation_phase: "SUBTOTAL_PHASE"
         }
     ]
-    return { line_items: line_items, fulfillments: fulfillments, taxes: taxes }
+    return { line_items: line_items, fulfillments: fulfillments, taxes: taxes, service_charges: service_charges }
 }
 
 module.exports = {
@@ -103,7 +114,7 @@ module.exports = {
                 }
             }
             payments_api.createPayment(payment_body).then(function (data) {
-                Event.findOne({date: moment("2020-04-29").format("YYYY-MM-DD")}, async function(err, event){
+                Event.findOne({ endTime: { $gte: moment().utcOffset(0).toDate(), $lte: moment().add(1, 'd').utcOffset(0).toDate()}}).sort({_id: -1}).exec(async function(err, event){
                     if(err) {
                         return res.status(500).send(err)
                     }

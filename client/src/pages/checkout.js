@@ -10,6 +10,7 @@ import Banner from '../components/banner';
 
 function Checkout(props) {
     const state = useContext(ApplicationContext);
+
     const [orderReceipt, setOrderReceipt] = useState();
     const [orderPlacer, setOrderPlacer] = useState({ name: "", phone: "", email: "", pickupTime: "" })
     const [emailValidity, setEmailValidity] = useState(false);
@@ -37,9 +38,9 @@ function Checkout(props) {
 
     const evaluateAndReturnTotal = () => {
         if (state.order.orderTip) {
-            return (parseFloat(state.order.orderTotal) + parseFloat(state.order.orderTip)).toFixed(2);
+            return ((parseFloat(state.order.orderTotal) * .04) + parseFloat(state.order.orderTotal) + parseFloat(state.order.orderTip)).toFixed(2);
         } else {
-            return state.order.orderTotal
+            return ((parseFloat(state.order.orderTotal) * .04) + parseFloat(state.order.orderTotal)).toFixed(2)
         }
     }
 
@@ -54,6 +55,13 @@ function Checkout(props) {
         getEvents();
     }, [])
 
+    useEffect(() => {
+        state.setOrder(prevState => ({
+            ...prevState,
+            orderTip: 0.00
+        }))
+    }, [])
+
     const displayPaymentForm = () => {
         return orderPlacer.name
             && orderPlacer.email
@@ -63,9 +71,13 @@ function Checkout(props) {
             && phoneValidity
     }
 
+    const displayOrderTotal = () => {
+        return ((parseFloat(state.order.orderTotal) * .04) + parseFloat(state.order.orderTotal)).toFixed(2)
+    }
+
     return (
         <>
-            <Banner event={props.event}/>
+            <Banner event={props.event} />
             <div class="container" style={{ height: displayPaymentForm() && !orderReceipt ? '115vh' : '100vh' }}>
                 <div class="box">
                     <div class="column is-4 is-offset-4">
@@ -87,8 +99,8 @@ function Checkout(props) {
                                 <label class="label">Pick Up Time</label>
                                 <div class="control">
                                     <div class="select is-primary">
-                                        <select value={orderPlacer.pickupTime}  onChange={(event)=> handleTimeChange(event.target.value)}>
-                                            {events.map(element => 
+                                        <select value={orderPlacer.pickupTime} onChange={(event) => handleTimeChange(event.target.value)}>
+                                            {events.map(element =>
                                                 <option value={element.time}>{moment(element.time).format("hh:mm a")}</option>
                                             )}
                                         </select>
@@ -104,7 +116,7 @@ function Checkout(props) {
                                         </div>
                                         <div class="level-item">
                                             {state.order.orderTotal ?
-                                                <div>${state.order.orderTotal}</div> : null}
+                                                <div>${displayOrderTotal()}</div> : null}
                                         </div>
                                     </div>
                                     <div class="level-right">

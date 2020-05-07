@@ -19,7 +19,7 @@ const HomePage = (props) => {
                         </div>
                         <div class="column is-3">
                             <h1 className="homepage-title">"It's doughlicous!"</h1>
-                            <p className="intro-paragraph">We're a St. Louis based food truck creating delicious wood fired pizza in 3 minutes or less. Click the order now button to schedule your pick up time and skip the line at our next event. </p>
+                            <p className="intro-paragraph">We're a St. Louis based food truck creating delicious 8 inch wood fired pizzas in 3 minutes or less. Click the order now button to schedule your pick up time and skip the line at our next event. </p>
                             <div className="order-now-button">
                                 <Link to="order-now">
                                     <button class="button is-large is-primary">Order Now!</button>

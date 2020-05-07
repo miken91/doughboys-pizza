@@ -75,7 +75,7 @@ function MobileOrderNow() {
                                 <div class="select is-primary">
                                     <select value={index} onChange={(event) => handleBeverageChange(event)}>
                                         {beverages.map((beverage, index) =>
-                                            <option value={index}>{beverage}</option>
+                                            <option value={index}>{beverage}-{beverage === "Red Bull" ? "2" : "1.50"}</option>
                                         )}
                                     </select>
                                 </div>

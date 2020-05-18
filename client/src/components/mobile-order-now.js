@@ -48,7 +48,7 @@ function MobileOrderNow() {
     const displayOrderTotal = () => {
         return ((parseFloat(state.order.orderTotal) * .04) + parseFloat(state.order.orderTotal)).toFixed(2)
     }
-    const beverages = ['Coke', 'Red Bull', 'Sprite', 'Water']
+    const beverages = ['Coke', 'Red Bull', 'Sprite', 'Water', 'Diet Coke', 'Dr Pepper', 'Diet Dr Pepper', 'A&W Root Beer']
     return (
         <div className="mobile">
             <div className="mobile-menu">
@@ -75,7 +75,7 @@ function MobileOrderNow() {
                                 <div class="select is-primary">
                                     <select value={index} onChange={(event) => handleBeverageChange(event)}>
                                         {beverages.map((beverage, index) =>
-                                            <option value={index}>{beverage}</option>
+                                            <option value={index}>{beverage} - {beverage === "Red Bull" ? "2.50" : "1.50"}</option>
                                         )}
                                     </select>
                                 </div>

@@ -11,7 +11,7 @@ module.exports = {
             }
             let times = event.availableTimes;
             res.send(times.filter(function (time) {
-                return time.count < 3 && moment(time.time).isAfter(moment().add(15, 'm'))
+                return time.count < 2 && moment(time.time).isAfter(moment().add(15, 'm'))
             }))
         })
     },

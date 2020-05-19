@@ -5,19 +5,19 @@ var Event = require('./event.model');
 
 module.exports = {
     getAvailableTimes: async function (req, res) {
-        Event.findOne({ endTime: { $gte: moment().utcOffset(0).toDate(), $lte: moment().add(1, 'd').utcOffset(0).toDate()}}).sort({_id: -1}).exec(function (err, event) {
+        Event.findOne({ endServiceTime: { $gte: moment().add().utcOffset(0).toDate(), $lte: moment().endOf("day").utcOffset(0).toDate() } }).sort({ _id: -1 }).sort({ _id: -1 }).exec(function (err, event) {
             if (err) {
                 return res.status(500).send(err)
             }
             let times = event.availableTimes;
             res.send(times.filter(function (time) {
-                return time.count < 2 && moment(time.time).isAfter(moment().add(15, 'm'))
+                return time.count < event.ordersPerFiveMinutes && moment(time.time).isAfter(moment().add(15, 'm'))
             }))
         })
     },
 
     getNextEvent: async function (req, res) {
-        Event.findOne({ endTime: { $gte: moment().utcOffset(0).toDate(), $lte: moment().add(1, 'd').utcOffset(0).toDate()}}).sort({_id: -1}).exec(function (err, event) {
+        Event.findOne({ endServiceTime: { $gte: moment().add().utcOffset(0).toDate(), $lte: moment().endOf("day").utcOffset(0).toDate() } }).sort({ _id: -1 }).sort({ _id: -1 }).exec(function (err, event) {
             if (err) {
                 return res.status(500).send(err)
             }
@@ -71,6 +71,8 @@ module.exports = {
                 description: eventReq.summary,
                 startTime: moment(eventReq.start),
                 endTime: moment(eventReq.end),
+                endServiceTime: moment(eventReq.start).add(1, 'h'),
+                ordersPerFiveMinutes: eventReq.amountOfOrders,
                 date: moment(eventReq.start).format("YYYY-MM-DD"),
                 availableTimes: times
             }
@@ -79,7 +81,7 @@ module.exports = {
             if (err) {
                 res.send("Error while adding event.")
             } else {
-                res.send({message: "Event added succesfully."})
+                res.send({ message: "Event added succesfully." })
             }
         })
     },
@@ -99,7 +101,16 @@ module.exports = {
             })
         }
 
-        Event.findByIdAndUpdate(req.params.id, { description: eventReq.summary, startTime: moment(eventReq.start), endTime: moment(eventReq.end), date: moment(eventReq.start).format("YYYY-MM-DD"), availableTimes: times }).then((ret, err) => {
+        Event.findByIdAndUpdate(req.params.id, 
+            { 
+                description: eventReq.summary, 
+                startTime: moment(eventReq.start), 
+                endTime: moment(eventReq.end), 
+                endServiceTime: moment(eventReq.start).add(1, 'h'),
+                ordersPerFiveMinutes: eventReq.amountOfOrders,
+                date: moment(eventReq.start).format("YYYY-MM-DD"), 
+                availableTimes: times 
+            }).then((ret, err) => {
             if (err) {
                 res.error("Error while editing event.")
             } else {
@@ -108,7 +119,7 @@ module.exports = {
         })
     },
 
-    deleteEvent: async function(req, res) {
+    deleteEvent: async function (req, res) {
         Event.findByIdAndDelete(req.params.id).then((ret, err) => {
             if (err) {
                 res.error("Error while deleting event.")

@@ -5,6 +5,7 @@ import { store } from 'react-notifications-component';
 function AddEvent(props) {
     const [startDateTime, setStartDateTime] = useState(new Date());
     const [endDateTime, setEndDateTime] = useState(new Date());
+    const [amountOfOrders, setAmountOfOrders] = useState(2);
     const [description, setDescription] = useState("");
     const [loading, setLoading] = useState(false);
     const handleClick = async () => {
@@ -13,7 +14,7 @@ function AddEvent(props) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({event: { summary: description, start: startDateTime, end: endDateTime}})})
+        body: JSON.stringify({event: { summary: description, start: startDateTime, end: endDateTime, amountOfOrders: amountOfOrders}})})
         response = await response.json()
         setLoading(false)
         if (response.message === "Event added succesfully.") {
@@ -74,6 +75,21 @@ function AddEvent(props) {
                         onChange={(value) => setEndDateTime(value)}
                         value={endDateTime}
                         disableClock={true} />
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Amount of Orders per 5 Minutes</label>
+                <div class="control">
+                    <div class="select is-primary">
+                        <select value={amountOfOrders} onChange={(event) => setAmountOfOrders(event.target.value)}>
+                            <option value={1}>1</option>
+                            <option value={2}>2</option>
+                            <option value={3}>3</option>
+                            <option value={4}>4</option>
+                            <option value={5}>5</option>
+                            <option value={6}>6</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="field">

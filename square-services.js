@@ -114,7 +114,7 @@ module.exports = {
                 }
             }
             payments_api.createPayment(payment_body).then(function (data) {
-                Event.findOne({ endTime: { $gte: moment().utcOffset(0).toDate(), $lte: moment().add(1, 'd').utcOffset(0).toDate()}}).sort({_id: -1}).exec(async function(err, event){
+                Event.findOne({ endServiceTime: { $gte: moment().add().utcOffset(0).toDate(), $lte: moment().endOf("day").utcOffset(0).toDate()}}).sort({_id: -1}).sort({_id: -1}).exec(async function(err, event){
                     if(err) {
                         return res.status(500).send(err)
                     }

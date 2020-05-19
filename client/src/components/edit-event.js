@@ -4,11 +4,12 @@ import moment from 'moment';
 import { store } from 'react-notifications-component';
 
 function EditEvent(props) {
-    const [events, setEvents] = useState([]);
+    const [events, setEvents] = useState();
     const [description, setDescription] = useState();
     const [eventId, setEventId] = useState();
     const [startDateTime, setStartDateTime] = useState();
     const [endDateTime, setEndDateTime] = useState();
+    const [amountOfOrders, setAmountOfOrders] = useState();
     const [index, setIndex] = useState(0);
     const [loading, setLoading] = useState(false);
 
@@ -19,7 +20,7 @@ function EditEvent(props) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ event: { summary: description, start: startDateTime, end: endDateTime } })
+            body: JSON.stringify({ event: { summary: description, start: startDateTime, end: endDateTime, amountOfOrders: amountOfOrders } })
         })
         getEvents()
         setLoading(false)
@@ -95,16 +96,17 @@ function EditEvent(props) {
         setDescription(events[index].description);
         setStartDateTime(events[index].startTime);
         setEndDateTime(events[index].endTime);
+        setAmountOfOrders(events[index].ordersPerFiveMinutes)
     }
 
     useEffect(() => {
         getEvents()
         props.updateList.setUpdateList(false)
-    }, [props.updateList.updateList])
+    }, [props.updateList])
 
     useEffect(() => {
-        if (events.length !== 0) {
-            setEventToEdit(index)
+        if (events) {
+            setEventToEdit(0)
         }
     }, [events])
 
@@ -114,7 +116,7 @@ function EditEvent(props) {
     return (
         <>
             <h1 class="subtitle is-5 is-spaced" style={{ marginTop: "1.5em" }}>Edit Existing Events</h1>
-            {events.length !== 0 ?
+            {events && events.length !== 0 ?
                 <>
                     <div class="field">
                         <label class="label">Select an Event to Edit</label>
@@ -150,6 +152,21 @@ function EditEvent(props) {
                                 onChange={(value) => setEndDateTime(value)}
                                 value={moment(endDateTime).toDate()}
                                 disableClock={true} />
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Amount of Orders per 5 Minutes</label>
+                        <div class="control">
+                            <div class="select is-primary">
+                                <select value={amountOfOrders} onChange={(event) => setAmountOfOrders(event.target.value)}>
+                                    <option value={1}>1</option>
+                                    <option value={2}>2</option>
+                                    <option value={3}>3</option>
+                                    <option value={4}>4</option>
+                                    <option value={5}>5</option>
+                                    <option value={6}>6</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="level is-mobile">

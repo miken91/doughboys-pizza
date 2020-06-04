@@ -31,6 +31,7 @@ function AddEvent(props) {
             setStartDateTime(new Date());
             setEndDateTime(new Date());
             setDescription("");
+            setAmountOfOrders(2);
         } else {
             store.addNotification({
                 title: "Error",

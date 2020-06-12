@@ -96,7 +96,7 @@ function EditEvent(props) {
         setDescription(events[index].description);
         setStartDateTime(events[index].startTime);
         setEndDateTime(events[index].endTime);
-        setAmountOfOrders(events[index].ordersPerFiveMinutes)
+        setAmountOfOrders(events[index].ordersPerFiveMinutes ? events[index].ordersPerFiveMinutes : 2)
     }
 
     useEffect(() => {

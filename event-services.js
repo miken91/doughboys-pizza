@@ -4,7 +4,7 @@ var Event = require('./event.model');
 
 module.exports = {
     getEventsForTheDay: async function(req, res) {
-        Event.find({ endServiceTime: { $gte: moment().add().utcOffset(0).toDate(), $lte: moment().endOf("day").utcOffset(0).toDate() } }).sort({ _id: -1 }).sort({ _id: -1}).exec(function (err, events) {
+        Event.find({ endServiceTime: { $gte: moment().add().utcOffset(0).toDate(), $lte: moment().add(24, 'hours').toDate() } }).sort({ _id: -1 }).sort({ _id: -1}).exec(function (err, events) {
             if (err) {
                 return res.status(500).send(err)
             }

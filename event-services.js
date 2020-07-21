@@ -1,18 +1,14 @@
-var cache = require('memory-cache');
 var fetch = require('node-fetch');
 const moment = require('moment');
 var Event = require('./event.model');
 
 module.exports = {
-    getAvailableTimes: async function (req, res) {
-        Event.findOne({ endServiceTime: { $gte: moment().add().utcOffset(0).toDate(), $lte: moment().endOf("day").utcOffset(0).toDate() } }).sort({ _id: -1 }).sort({ _id: -1 }).exec(function (err, event) {
+    getEventsForTheDay: async function(req, res) {
+        Event.find({ endServiceTime: { $gte: moment().add().utcOffset(0).toDate(), $lte: moment().endOf("day").utcOffset(0).toDate() } }).sort({ _id: -1 }).sort({ _id: -1}).exec(function (err, events) {
             if (err) {
                 return res.status(500).send(err)
             }
-            let times = event.availableTimes;
-            res.send(times.filter(function (time) {
-                return time.count < event.ordersPerFiveMinutes && moment(time.time).isAfter(moment().add(15, 'm'))
-            }))
+            res.send(events);
         })
     },
 

@@ -6,31 +6,32 @@ import {
   Switch,
   Route,
   Redirect,
+  useLocation
 } from "react-router-dom";
 import ApplicationContext from './ApplicationContext';
 import Checkout from './pages/checkout';
 import Contact from './pages/contact';
-import moment from 'moment';
 import Admin from './pages/admin';
 
 function App() {
   const [order, setOrder] = useState({ itemsOrdered: [], orderTotal: 0.00, orderTip: 0.00})
-  const [event, setEvent] = useState();
+  const [events, setEvents] = useState([]);
+  const location = useLocation();
   useEffect(() => {
-    async function getEvent() {
-      let response = await fetch('/next-event')
+    async function getEvents() {
+      let response = await fetch('/get-events-for-the-day')
       if (response) {
-        setEvent(await response.json());
+        setEvents(await response.json());
       }
     }
-    getEvent();
-  }, [])
+    getEvents();
+  }, [location])
   return (
-    <ApplicationContext.Provider value={{ order, setOrder }}>
+    <ApplicationContext.Provider value={{ order, setOrder, events }}>
       <Layout>
         <Switch>
           <Route path="/order-now">
-            {event && Object.entries(event).length !== 0 ? <OrderNow /> :
+            {events.length !== 0 ? <OrderNow /> :
               <div class="container" style={{ height: '100vh' }}>
                 <div class="box">
                   <h1 class="subtitle" style={{ textAlign: 'center' }}>Sorry, we aren't currently taking online orders. Please check back soon!</h1>
@@ -39,7 +40,7 @@ function App() {
           </Route>
           <Route path="/checkout">
             {order.orderTotal !== 0 ?
-              <Checkout event={event} /> : <Redirect to="/order-now" />}
+              <Checkout events={events} /> : <Redirect to="/order-now" />}
           </Route>
           <Route path="/contact">
             <Contact />
@@ -48,12 +49,14 @@ function App() {
             <Admin/>
           </Route>
           <Route path="/">
-              <HomePage event={event} />
+              <HomePage events={events} />
             </Route>
         </Switch>
       </Layout>
     </ApplicationContext.Provider>
+
   );
 }
 
 export default App;
+

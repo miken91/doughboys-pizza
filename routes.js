@@ -3,16 +3,16 @@ var squareServices = require('./square-services');
 var eventServices = require('./event-services')
 var router = express.Router();
 
-router.get('/available-times', function (req, res) {
-    eventServices.getAvailableTimes(req, res)
-})
-
 router.get('/next-event', function(req, res) {
     eventServices.getNextEvent(req, res)
 })
 
 router.get('/batch-update-events', function (req, res){
     eventServices.batchUpdateEvents(req, res)
+})
+
+router.get('/get-events-for-the-day', function(req, res){
+    eventServices.getEventsForTheDay(req, res)
 })
 
 router.post('/add-event', function(req, res){

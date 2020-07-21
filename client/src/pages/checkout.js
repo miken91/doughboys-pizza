@@ -8,14 +8,14 @@ import PaymentPage from '../components/square-payment';
 import moment from 'moment';
 import Banner from '../components/banner';
 
-function Checkout(props) {
+function Checkout() {
     const state = useContext(ApplicationContext);
 
     const [orderReceipt, setOrderReceipt] = useState();
-    const [orderPlacer, setOrderPlacer] = useState({ name: "", phone: "", email: "", pickupTime: "" })
+    const [orderPlacer, setOrderPlacer] = useState({ name: "", phone: "", email: "", pickupTimeId: "", eventId: state.events[0]._id, pickupTime: "" })
     const [emailValidity, setEmailValidity] = useState(false);
     const [phoneValidity, setPhoneValidity] = useState(false);
-    const [events, setEvents] = useState([]);
+    const [events, setEvents] = useState(state.events);
     const handleChange = e => {
         const { name, value } = e.target;
         setOrderPlacer(prevState => ({
@@ -32,8 +32,16 @@ function Checkout(props) {
     const handleTimeChange = value => {
         setOrderPlacer(prevState => ({
             ...prevState,
-            ['pickupTime']: value
+            pickupTimeId: value,
+            pickupTime: event.availableTimes.find(time => time._id === value).time
         }));
+    }
+
+    const handleEventChange = value => {
+        setOrderPlacer(prevState => ({
+            ...prevState,
+            eventId: value
+        }))
     }
 
     const evaluateAndReturnTotal = () => {
@@ -43,17 +51,6 @@ function Checkout(props) {
             return ((parseFloat(state.order.orderTotal) * .04) + parseFloat(state.order.orderTotal)).toFixed(2)
         }
     }
-
-    useEffect(() => {
-        async function getEvents() {
-            let response = await fetch('/available-times')
-            let eventsForList = await response.json();
-            console.log(eventsForList);
-            setEvents(eventsForList)
-            handleTimeChange(eventsForList[0].time)
-        }
-        getEvents();
-    }, [])
 
     useEffect(() => {
         state.setOrder(prevState => ({
@@ -66,7 +63,8 @@ function Checkout(props) {
         return orderPlacer.name
             && orderPlacer.email
             && orderPlacer.phone
-            && orderPlacer.pickupTime
+            && orderPlacer.eventId
+            && orderPlacer.pickupTimeId
             && emailValidity
             && phoneValidity
     }
@@ -75,9 +73,10 @@ function Checkout(props) {
         return ((parseFloat(state.order.orderTotal) * .04) + parseFloat(state.order.orderTotal)).toFixed(2)
     }
 
+    const event = events.find(event => event._id === orderPlacer.eventId);
     return (
         <>
-            <Banner event={props.event} />
+            <Banner/>
             <div class="container" style={{ height: displayPaymentForm() && !orderReceipt ? '115vh' : '100vh' }}>
                 <div class="box">
                     <div class="column is-4 is-offset-4">
@@ -96,16 +95,31 @@ function Checkout(props) {
                                 <div class="control">
                                     <input class="input" type="email" placeholder="Valid Email" name="email" value={orderPlacer.email} onChange={handleChange} />
                                 </div>
-                                <label class="label">Pick Up Time</label>
+                                <label class="label">Event</label>
                                 <div class="control">
                                     <div class="select is-primary">
-                                        <select value={orderPlacer.pickupTime} onChange={(event) => handleTimeChange(event.target.value)}>
+                                        <select value={orderPlacer.eventId} onChange={(event) => handleEventChange(event.target.value)}>
                                             {events.map(element =>
-                                                <option value={element.time}>{moment(element.time).format("hh:mm a")}</option>
+                                                <option value={element._id}>{element.description}</option>
                                             )}
                                         </select>
                                     </div>
                                 </div>
+                                {orderPlacer.eventId ? 
+                                <>
+                                <label class="label">Pick Up Time</label>
+                                <div class="control">
+                                    <div class="select is-primary">
+                                        <select value={orderPlacer.pickupTimeId} onChange={(event) => handleTimeChange(event.target.value)}>
+                                            <option value="" disabled selected hidden>Please Select A Time</option>
+                                            {event.availableTimes.filter(time => time.count < event.ordersPerFiveMinutes).map(element =>
+                                                <option value={element._id}>{moment(element.time).format("hh:mm a")}</option>
+                                            )}
+                                        </select>
+                                    </div>
+                                </div>
+                                </>
+                                : null}
                             </div>
                             <h1 className="contact-information-title">Order Summary</h1>
                             <div style={{ marginBottom: "1.15em" }}>

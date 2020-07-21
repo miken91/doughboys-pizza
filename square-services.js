@@ -16,14 +16,14 @@ async function getCatalogFromSquare() {
     if (cache.get("catalog")) {
         data = cache.get("catalog")
         catalog = data.objects.filter(exports => exports.type === "ITEM");
-        catalog_modifiers = data.objects[process.env.NODE_ENV === 'production' ? 22 : 24].modifier_list_data.modifiers;
+        catalog_modifiers = data.objects[22].modifier_list_data.modifiers;
         tax = data.objects.filter(exports => exports.type === "TAX");
     } else {
         try {
             data = await catalog_api.listCatalog();
             cache.put("catalog", data);
             catalog = data.objects.filter(exports => exports.type === "ITEM");
-            catalog_modifiers = data.objects[process.env.NODE_ENV === 'production' ? 22 : 24].modifier_list_data.modifiers;
+            catalog_modifiers = data.objects[22].modifier_list_data.modifiers;
             tax = data.objects.filter(exports => exports.type === "TAX");
         } catch (error) {
             console.error(error);
@@ -39,7 +39,7 @@ async function mapRequestToOrder(body) {
     body.order.itemsOrdered.forEach(itemFromReq => {
         const added_item = catalog.items.filter(item =>
             item.item_data.name.includes(itemFromReq.type))
-        item_id = added_item[0].item_data.variations[0].id;   
+        item_id = added_item[0].item_data.variations[0].id;
         const modifiers = [];
         catalog.modifiers.forEach(modifier => {
             if (itemFromReq.toppings && itemFromReq.toppings.includes(modifier.modifier_data.name)) {
@@ -114,19 +114,19 @@ module.exports = {
                 }
             }
             payments_api.createPayment(payment_body).then(function (data) {
-                Event.findOne({ endServiceTime: { $gte: moment().add().utcOffset(0).toDate(), $lte: moment().endOf("day").utcOffset(0).toDate()}}).sort({_id: -1}).sort({_id: -1}).exec(async function(err, event){
-                    if(err) {
+                Event.findById(req.body.orderPlacer.eventId, function (err, event) {
+                    if (err) {
                         return res.status(500).send(err)
                     }
                     event.availableTimes.forEach(time => {
-                        if(moment(time.time).isSame(moment(req.body.orderPlacer.pickupTime),"minute")) {
-                            time.count ++;
+                        if (time.id === req.body.orderPlacer.pickupTimeId) {
+                            time.count++;
                         }
                     });
                     event.save();
-                }) 
-                
-               
+                })
+
+
                 res.send(JSON.stringify(data));
             }, function (error) {
                 console.log(error);

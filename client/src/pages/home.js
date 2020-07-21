@@ -8,7 +8,7 @@ import Banner from "../components/banner";
 const HomePage = (props) => {
     return (
         <>
-            <Banner event={props.event}/>
+            <Banner/>
             <div style={{ height: "80vh" }} class="container">
                 <div class="box">
                     <div class="columns">

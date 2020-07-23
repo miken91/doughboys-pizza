@@ -77,7 +77,7 @@ function Checkout() {
     return (
         <>
             <Banner/>
-            <div class="container" style={{ height: displayPaymentForm() && !orderReceipt ? '115vh' : '100vh' }}>
+            <div class="container" style={{ height: '100%'}}>
                 <div class="box">
                     <div class="column is-4 is-offset-4">
                         {!orderReceipt ? <>

@@ -112,7 +112,7 @@ function Checkout() {
                                     <div class="select is-primary">
                                         <select value={orderPlacer.pickupTimeId} onChange={(event) => handleTimeChange(event.target.value)}>
                                             <option value="" disabled selected hidden>Please Select A Time</option>
-                                            {event.availableTimes.filter(time => time.count < event.ordersPerFiveMinutes).map(element =>
+                                            {event.availableTimes.filter(time => time.count < event.ordersPerFiveMinutes && moment(time.time).isBefore(moment(event.endServiceTime))).map(element =>
                                                 <option value={element._id}>{moment(element.time).format("hh:mm a")}</option>
                                             )}
                                         </select>

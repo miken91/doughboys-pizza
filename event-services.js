@@ -8,6 +8,7 @@ module.exports = {
             if (err) {
                 return res.status(500).send(err)
             }
+            events.sort((a, b)=>a.startTime.getTime() - b.endTime.getTime());
             res.send(events);
         })
     },
@@ -67,7 +68,7 @@ module.exports = {
                 description: eventReq.summary,
                 startTime: moment(eventReq.start),
                 endTime: moment(eventReq.end),
-                endServiceTime: moment(eventReq.start).add(1, 'h'),
+                endServiceTime: moment(eventReq.end).subtract(30, 'm'),
                 ordersPerFiveMinutes: eventReq.amountOfOrders,
                 date: moment(eventReq.start).format("YYYY-MM-DD"),
                 availableTimes: times
@@ -102,7 +103,7 @@ module.exports = {
                 description: eventReq.summary, 
                 startTime: moment(eventReq.start), 
                 endTime: moment(eventReq.end), 
-                endServiceTime: moment(eventReq.start).add(1, 'h'),
+                endServiceTime: moment(eventReq.end).subtract(30, 'm'),
                 ordersPerFiveMinutes: eventReq.amountOfOrders,
                 date: moment(eventReq.start).format("YYYY-MM-DD"), 
                 availableTimes: times 

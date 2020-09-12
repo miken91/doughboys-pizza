@@ -12,7 +12,7 @@
     "memory-cache": "^0.2.0",
     "moment": "^2.27.0",
     "mongoose": "^5.9.21",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "nodemailer": "^6.4.10",
     "square-connect": "^3.20200528.0",
     "uuid": "^7.0.3"

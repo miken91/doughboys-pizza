@@ -16,14 +16,14 @@ async function getCatalogFromSquare() {
     if (cache.get("catalog")) {
         data = cache.get("catalog")
         catalog = data.objects.filter(exports => exports.type === "ITEM");
-        catalog_modifiers = data.objects[22].modifier_list_data.modifiers;
+        catalog_modifiers = data.objects[21].modifier_list_data.modifiers;
         tax = data.objects.filter(exports => exports.type === "TAX");
     } else {
         try {
             data = await catalog_api.listCatalog();
             cache.put("catalog", data);
             catalog = data.objects.filter(exports => exports.type === "ITEM");
-            catalog_modifiers = data.objects[22].modifier_list_data.modifiers;
+            catalog_modifiers = data.objects[21].modifier_list_data.modifiers;
             tax = data.objects.filter(exports => exports.type === "TAX");
         } catch (error) {
             console.error(error);
@@ -66,13 +66,14 @@ async function mapRequestToOrder(body) {
             }
         }
     ]
-    let taxes = [
-        {
+    let taxes = []
+    if(catalog.tax.length > 0) {
+        taxes.push({
             name: catalog.tax[0].name,
             catalog_object_id: catalog.tax[0].id,
             scope: "ORDER"
-        },
-    ]
+        })
+    }
     let service_charges = [
         {
             name: "Online Ordering Fee",
@@ -84,7 +85,11 @@ async function mapRequestToOrder(body) {
             calculation_phase: "SUBTOTAL_PHASE"
         }
     ]
-    return { line_items: line_items, fulfillments: fulfillments, taxes: taxes, service_charges: service_charges }
+    if(taxes.length > 0) {
+        return { line_items: line_items, fulfillments: fulfillments, taxes: taxes, service_charges: service_charges }
+    } else {
+        return { line_items: line_items, fulfillments: fulfillments, service_charges: service_charges }
+    }
 }
 
 module.exports = {

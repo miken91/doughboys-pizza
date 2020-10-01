@@ -16,20 +16,22 @@ async function getCatalogFromSquare() {
     if (cache.get("catalog")) {
         data = cache.get("catalog")
         catalog = data.objects.filter(exports => exports.type === "ITEM");
-        catalog_modifiers = data.objects[21].modifier_list_data.modifiers;
+        catalog_modifiers = data.objects.filter(exports => exports.type ==="MODIFIER_LIST");
+        catalog_modifiers = catalog_modifiers.filter(exports => exports.modifier_list_data.name ==="Toppings");
         tax = data.objects.filter(exports => exports.type === "TAX");
     } else {
         try {
             data = await catalog_api.listCatalog();
             cache.put("catalog", data);
             catalog = data.objects.filter(exports => exports.type === "ITEM");
-            catalog_modifiers = data.objects[21].modifier_list_data.modifiers;
+            catalog_modifiers = data.objects.filter(exports => exports.type ==="MODIFIER_LIST");
+            catalog_modifiers = catalog_modifiers.filter(exports => exports.modifier_list_data.name ==="Toppings");
             tax = data.objects.filter(exports => exports.type === "TAX");
         } catch (error) {
             console.error(error);
         }
     }
-    return { items: catalog, modifiers: catalog_modifiers, tax: tax }
+    return { items: catalog, modifiers: catalog_modifiers[0].modifier_list_data.modifiers, tax: tax }
 }
 
 async function mapRequestToOrder(body) {

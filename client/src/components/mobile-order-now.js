@@ -46,7 +46,11 @@ function MobileOrderNow() {
     }
 
     const displayOrderTotal = () => {
-        return ((parseFloat(state.order.orderTotal) * .04) + parseFloat(state.order.orderTotal)).toFixed(2)
+        return ((parseFloat(state.order.orderTotal) * .04) + (parseFloat(state.order.orderTotal) * .0873) + parseFloat(state.order.orderTotal)).toFixed(2)
+    }
+    
+    const displayTax = () => {
+        return (parseFloat(state.order.orderTotal) * .0873).toFixed(2);
     }
     const beverages = ['Coke', 'Red Bull', 'Sprite', 'Water', 'Diet Coke', 'Dr Pepper', 'Diet Dr Pepper', 'A&W Root Beer']
     return (
@@ -137,6 +141,18 @@ function MobileOrderNow() {
                                 <div class="level-right">
                                     <div class="level-item">
                                         <div>${displayOnlineOrderFee()}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="level is-mobile">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        <div className="order-summary-pizza-title">Order Tax</div>
+                                    </div>
+                                </div>
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div>${displayTax()}</div>
                                     </div>
                                 </div>
                             </div>

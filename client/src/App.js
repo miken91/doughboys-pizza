@@ -49,8 +49,8 @@ function App() {
             <Admin/>
           </Route>
           <Route path="/">
-              <HomePage events={events} />
-            </Route>
+            <HomePage events={events} />
+          </Route>
         </Switch>
       </Layout>
     </ApplicationContext.Provider>

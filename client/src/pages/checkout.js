@@ -46,9 +46,9 @@ function Checkout() {
 
     const evaluateAndReturnTotal = () => {
         if (state.order.orderTip) {
-            return ((parseFloat(state.order.orderTotal) * .04) + parseFloat(state.order.orderTotal) + parseFloat(state.order.orderTip)).toFixed(2);
+            return ((parseFloat(state.order.orderTotal) * .04) + (parseFloat(state.order.orderTotal * .0873)) + parseFloat(state.order.orderTotal) + parseFloat(state.order.orderTip)).toFixed(2);
         } else {
-            return ((parseFloat(state.order.orderTotal) * .04) + parseFloat(state.order.orderTotal)).toFixed(2)
+            return ((parseFloat(state.order.orderTotal) * .04) + (parseFloat(state.order.orderTotal * .0873)) + parseFloat(state.order.orderTotal)).toFixed(2)
         }
     }
 
@@ -70,7 +70,7 @@ function Checkout() {
     }
 
     const displayOrderTotal = () => {
-        return ((parseFloat(state.order.orderTotal) * .04) + parseFloat(state.order.orderTotal)).toFixed(2)
+        return ((parseFloat(state.order.orderTotal) * .04) + (parseFloat(state.order.orderTotal * .0873)) + parseFloat(state.order.orderTotal)).toFixed(2)
     }
 
     const event = events.find(event => event._id === orderPlacer.eventId);

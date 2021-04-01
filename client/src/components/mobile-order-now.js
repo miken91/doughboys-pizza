@@ -155,8 +155,8 @@ function MobileOrderNow() {
                                         <div>${displayTax()}</div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="level is-mobile"> */}
+                            </div> */}
+                            <div class="level is-mobile">
                                 <div class="level-left">
                                     <div class="level-item">
                                         <div className="order-summary-pizza-title">Order Total</div>
